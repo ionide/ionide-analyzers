@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "fsharp-analyzers": {
+      "version": "0.18.0",
+      "commands": [
+        "fsharp-analyzers"
+      ]
+    },
+    "fantomas": {
+      "version": "6.2.3",
+      "commands": [
+        "fantomas"
+      ]
+    },
+    "fsdocs-tool": {
+      "version": "20.0.0-alpha-002",
+      "commands": [
+        "fsdocs"
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A75DEA54-6175-4364-BCAB-23F9BF054006}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ionide.Analyzers", "src\Ionide.Analyzers\Ionide.Analyzers.fsproj", "{37A4EE72-5FF8-4255-8004-71CFF6193E14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EBA500BA-82FE-4E55-82F1-0B2FE5A94E14}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ionide.Analyzers.Tests", "tests\Ionide.Analyzers.Tests\Ionide.Analyzers.Tests.fsproj", "{93CC938F-1F27-4CE4-9AD4-52D057AB3DC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37A4EE72-5FF8-4255-8004-71CFF6193E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37A4EE72-5FF8-4255-8004-71CFF6193E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37A4EE72-5FF8-4255-8004-71CFF6193E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37A4EE72-5FF8-4255-8004-71CFF6193E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93CC938F-1F27-4CE4-9AD4-52D057AB3DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93CC938F-1F27-4CE4-9AD4-52D057AB3DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93CC938F-1F27-4CE4-9AD4-52D057AB3DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93CC938F-1F27-4CE4-9AD4-52D057AB3DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{37A4EE72-5FF8-4255-8004-71CFF6193E14} = {A75DEA54-6175-4364-BCAB-23F9BF054006}
+		{93CC938F-1F27-4CE4-9AD4-52D057AB3DC8} = {EBA500BA-82FE-4E55-82F1-0B2FE5A94E14}
+	EndGlobalSection
+EndGlobal
