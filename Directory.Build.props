@@ -35,7 +35,7 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(IsPackable)' == 'true'">
-        <None Include="$(MSBuildThisFileDirectory)\..\README.md" Visible="false" Pack="true" PackagePath=""/>
+        <None Include="$(MSBuildThisFileDirectory)/README.md" Visible="false" Pack="true" PackagePath=""/>
         <PackageReference Include="Ionide.KeepAChangelog.Tasks" PrivateAssets="all"/>
         <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="all"/>
     </ItemGroup>
