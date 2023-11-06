@@ -1,12 +1,43 @@
 #r "nuget: Fun.Build, 1.0.2"
 #r "nuget: Fake.IO.FileSystem, 6.0.0"
 
+open System.Text.Json
 open Fake.IO
-open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fun.Build
 
 let cleanDirs globExpr = (!!globExpr) |> Shell.cleanDirs
+
+/// Workaround for https://github.com/dotnet/sdk/issues/35989
+let restoreTools (ctx: Internal.StageContext) =
+    async {
+        let json = File.readAsString ".config/dotnet-tools.json"
+        let jsonDocument = JsonDocument.Parse(json)
+        let root = jsonDocument.RootElement
+        let tools = root.GetProperty("tools")
+
+        let! installs =
+            tools.EnumerateObject()
+            |> Seq.map (fun tool ->
+                let version = tool.Value.GetProperty("version").GetString()
+                ctx.RunCommand $"dotnet tool install %s{tool.Name} --version %s{version}"
+            )
+            |> Async.Sequential
+
+        let failedInstalls =
+            installs
+            |> Array.tryPick (
+                function
+                | Ok _ -> None
+                | Error error -> Some error
+            )
+
+        match failedInstalls with
+        | None -> return 0
+        | Some error ->
+            printfn $"%s{error}"
+            return 1
+    }
 
 pipeline "Build" {
     workingDir __SOURCE_DIRECTORY__
@@ -23,7 +54,7 @@ pipeline "Build" {
         )
     }
     stage "lint" {
-        run "dotnet tool restore"
+        run restoreTools
         run "dotnet fantomas . --check"
     }
     stage "restore" { run "dotnet restore" }
@@ -52,6 +83,7 @@ pipeline "Docs" {
                 "DOTNET_ROLL_FORWARD_TO_PRERELEASE", "1"
                 "DOTNET_ROLL_FORWARD", "LatestMajor"
             |]
+        run restoreTools
         run "dotnet fsdocs watch --port 7890"
     }
     runIfOnlySpecified true
