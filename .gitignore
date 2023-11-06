@@ -487,3 +487,6 @@ $RECYCLE.BIN/
 output/
 .fsdocs/
 tmp/
+
+# Analyzers
+*.sarif

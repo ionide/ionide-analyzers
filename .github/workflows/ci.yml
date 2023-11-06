@@ -20,8 +20,11 @@ permissions:
 
 jobs:
   ci:
-
-    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -32,8 +35,19 @@ jobs:
       - name: Build
         run: dotnet fsi build.fsx
 
+      - name: Analyzers
+        continue-on-error: true
+        run: dotnet fsharp-analyzers --project ./src/Ionide.Analyzers/Ionide.Analyzers.fsproj --project ./tests/Ionide.Analyzers.Tests/Ionide.Analyzers.Tests.fsproj --analyzers-path ./src/Ionide.Analyzers/bin/Release/net6.0 --report ./report.sarif
+        if: matrix.os == 'ubuntu-latest'
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          sarif_file: ./report.sarif
+
       - name: Upload documentation
-        if: github.ref == 'refs/heads/main'
+        if:  matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v2
         with:
           path: ./output
