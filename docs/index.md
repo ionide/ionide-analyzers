@@ -1,5 +1,5 @@
 # Ionide.Analyzers
 
-<!-- Random stoic quote -->
+Welcome to the Ionide Analyzers project.
 
-> A gem cannot be polished without friction, nor a man perfected without trials. - Seneca
+Learn how to [get started contributing]({{fsdocs-next-page-link}})!
