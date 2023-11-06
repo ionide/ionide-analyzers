@@ -20,7 +20,6 @@ permissions:
 
 jobs:
   ci:
-    continue-on-error: true
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
