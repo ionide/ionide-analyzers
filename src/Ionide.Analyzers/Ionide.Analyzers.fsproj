@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Include="Library.fs" />
+    <Compile Include="Hints\CopyAndUpdateRecordChangesAllFieldsAnalyzer.fs" />
   </ItemGroup>
 
   <ItemGroup>

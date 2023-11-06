@@ -33,13 +33,27 @@ pipeline "Build" {
     }
     stage "test" { run "dotnet test --no-restore --no-build -c Release" }
     stage "pack" { run "dotnet pack ./src/Ionide.Analyzers/Ionide.Analyzers.fsproj -c Release -o bin" }
-    stage "docs" { run "dotnet fsdocs build" }
+    stage "docs" {
+        envVars
+            [|
+                "DOTNET_ROLL_FORWARD_TO_PRERELEASE", "1"
+                "DOTNET_ROLL_FORWARD", "LatestMajor"
+            |]
+        run "dotnet fsdocs build --properties Configuration=Release"
+    }
     runIfOnlySpecified false
 }
 
 pipeline "Docs" {
     workingDir __SOURCE_DIRECTORY__
-    stage "main" { run "dotnet fsdocs watch --port 7890" }
+    stage "main" {
+        envVars
+            [|
+                "DOTNET_ROLL_FORWARD_TO_PRERELEASE", "1"
+                "DOTNET_ROLL_FORWARD", "LatestMajor"
+            |]
+        run "dotnet fsdocs watch --port 7890"
+    }
     runIfOnlySpecified true
 }
 
