@@ -11,7 +11,7 @@ type UpdateRecord = SynExprRecordField list * range
 
 [<CliAnalyzer("CopyAndUpdateRecordChangesAllFieldsAnalyzer",
               "Detect if all fields of an update record are updated.",
-              "https://github.com/fsharp/fslang-suggestions/issues/603")>]
+              "https://ionide.io/ionide-analyzers/hints/001.html")>]
 let copyAndUpdateRecordChangesAllFieldsAnalyzer: Analyzer<CliContext> =
     fun (context: CliContext) ->
         async {
