@@ -10,7 +10,7 @@ open FSharp.Compiler.Syntax
 type UpdateRecord = SynExprRecordField list * range
 
 [<CliAnalyzer("CopyAndUpdateRecordChangesAllFieldsAnalyzer",
-              "Detect if all fields of an update record are updated.",
+              "Detect if all fields in a record update expression are updated.",
               "https://ionide.io/ionide-analyzers/hints/001.html")>]
 let copyAndUpdateRecordChangesAllFieldsAnalyzer: Analyzer<CliContext> =
     fun (context: CliContext) ->
