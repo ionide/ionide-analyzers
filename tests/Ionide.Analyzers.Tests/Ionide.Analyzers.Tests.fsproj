@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzerTests.fs" />
+    <Compile Include="Suggestion\IgnoreFunctionAnalyzerTests.fs" />
     <Compile Include="Style\SquareBracketArrayAnalyzerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
