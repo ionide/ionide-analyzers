@@ -51,7 +51,7 @@ let copyAndUpdateRecordChangesAllFieldsAnalyzer: Analyzer<CliContext> =
                                     Message =
                                         "All record fields of record are being updated. Consider creating a new instance instead."
                                     Code = "IONIDE-001"
-                                    Severity = Warning
+                                    Severity = Severity.Hint
                                     Range = mExpr
                                     Fixes = []
                                 }
