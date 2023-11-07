@@ -14,7 +14,7 @@ let ignoreFunctionAnalyzer (ctx: CliContext) =
 
         let tastCollector =
             { new TypedTreeCollectorBase() with
-                override x.WalkCall (m: range) (mfv: FSharpMemberOrFunctionOrValue) (args: FSharpExpr list) =
+                override x.WalkCall _ (mfv: FSharpMemberOrFunctionOrValue) _ _ (args: FSharpExpr list) (m: range) =
                     if
                         mfv.FullName = "Microsoft.FSharp.Core.Operators.ignore"
                         && args.Length = 1
@@ -34,8 +34,6 @@ let ignoreFunctionAnalyzer (ctx: CliContext) =
         match ctx.TypedTree with
         | None -> return []
         | Some typedTree ->
-            for decl in typedTree.Declarations do
-                walkTast tastCollector decl
-
+            walkTast tastCollector typedTree
             return Seq.toList messages
     }

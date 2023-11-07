@@ -33,7 +33,7 @@ let copyAndUpdateRecordChangesAllFieldsAnalyzer: Analyzer<CliContext> =
 
             let tastCollector =
                 { new TypedTreeCollectorBase() with
-                    override x.WalkNewRecord (mRecord: range) (recordType: FSharpType) =
+                    override x.WalkNewRecord (recordType: FSharpType) _ (mRecord: range) =
                         let matchingUnTypedNode =
                             untypedRecordUpdates
                             |> List.tryFind (fun (_, mExpr) -> Range.equals mExpr mRecord)
@@ -59,7 +59,7 @@ let copyAndUpdateRecordChangesAllFieldsAnalyzer: Analyzer<CliContext> =
 
             match context.TypedTree with
             | None -> ()
-            | Some typedTree -> typedTree.Declarations |> List.iter (walkTast tastCollector)
+            | Some typedTree -> walkTast tastCollector typedTree
 
             return Seq.toList messages
         }
