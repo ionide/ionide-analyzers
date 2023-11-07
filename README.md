@@ -1,6 +1,6 @@
 # Ionide.Analyzers
 
-A fsharp community project containing [analyzers](https://ionide.io/FSharp.Analyzers.SDK/). 
+An fsharp community project containing [analyzers](https://ionide.io/FSharp.Analyzers.SDK/). 
 
 ## Getting started
 
