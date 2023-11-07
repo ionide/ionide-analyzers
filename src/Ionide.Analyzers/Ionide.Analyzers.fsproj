@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Library.fs" />
     <Compile Include="Hints\CopyAndUpdateRecordChangesAllFieldsAnalyzer.fs" />
     <Compile Include="Style\SquareBracketArrayAnalyzer.fs" />
   </ItemGroup>
