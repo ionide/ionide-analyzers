@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_ROLL_FORWARD_TO_PRERELEASE: 1
+  DOTNET_ROLL_FORWARD: LatestMajor
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: Build
+        run: dotnet fsi build.fsx
+
+      - name: Analyzers
+        continue-on-error: true
+        run: dotnet fsharp-analyzers --project ./src/Ionide.Analyzers/Ionide.Analyzers.fsproj --project ./tests/Ionide.Analyzers.Tests/Ionide.Analyzers.Tests.fsproj --analyzers-path ./src/Ionide.Analyzers/bin/Release/net6.0 --report ./report.sarif
+        if: matrix.os == 'ubuntu-latest'
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          sarif_file: ./report.sarif
+
+      - name: Upload documentation
+        if:  matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./output
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
