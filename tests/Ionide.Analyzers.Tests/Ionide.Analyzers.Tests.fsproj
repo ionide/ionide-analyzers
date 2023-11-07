@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Hints\CopyAndUpdateRecordChangesAllFieldsAnalyzerTests.fs" />
+    <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzerTests.fs" />
     <Compile Include="Style\SquareBracketArrayAnalyzerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

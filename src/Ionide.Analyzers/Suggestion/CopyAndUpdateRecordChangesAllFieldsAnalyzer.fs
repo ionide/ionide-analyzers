@@ -1,4 +1,4 @@
-﻿module Ionide.Analyzers.Hints.CopyAndUpdateRecordChangesAllFieldsAnalyzer
+﻿module Ionide.Analyzers.Suggestion.CopyAndUpdateRecordChangesAllFieldsAnalyzer
 
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting

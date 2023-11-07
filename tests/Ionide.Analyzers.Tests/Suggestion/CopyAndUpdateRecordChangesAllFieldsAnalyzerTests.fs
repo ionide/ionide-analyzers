@@ -1,9 +1,9 @@
-﻿module Ionide.Analyzers.Tests.Hints.CopyAndUpdateRecordChangesAllFieldsAnalyzerTests
+﻿module Ionide.Analyzers.Tests.Suggestion.CopyAndUpdateRecordChangesAllFieldsAnalyzerTests
 
 open NUnit.Framework
 open FSharp.Compiler.CodeAnalysis
 open FSharp.Analyzers.SDK.Testing
-open Ionide.Analyzers.Hints.CopyAndUpdateRecordChangesAllFieldsAnalyzer
+open Ionide.Analyzers.Suggestion.CopyAndUpdateRecordChangesAllFieldsAnalyzer
 
 let mutable projectOptions: FSharpProjectOptions = FSharpProjectOptions.zero
 
