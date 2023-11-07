@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzer.fs" />
     <Compile Include="Suggestion\IgnoreFunctionAnalyzer.fs" />
+    <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzer.fs" />
     <Compile Include="Style\SquareBracketArrayAnalyzer.fs" />
   </ItemGroup>
 
