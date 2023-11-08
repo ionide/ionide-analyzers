@@ -7,7 +7,7 @@ An fsharp community project containing [analyzers](https://ionide.io/FSharp.Anal
 ## Running these analyzers
 
 To run these analyzers you need to download the [fsharp-analyzers tool](https://www.nuget.org/packages/fsharp-analyzers) and this [NuGet package](https://www.nuget.org/packages/Ionide.Analyzers/absoluteLatest).  
-Learn more getting started in the [SDK documentation](https://ionide.io/FSharp.Analyzers.SDK/content/Getting%20Started%20Using.html) or follow this [quick start guide](https://ionide.io/ionide-analyzers/#Quick-start).
+Learn more on getting started in the [SDK documentation](https://ionide.io/FSharp.Analyzers.SDK/content/Getting%20Started%20Using.html) or follow this [quick start guide](https://ionide.io/ionide-analyzers/#Quick-start).
 
 ## Getting started contributing!
 
