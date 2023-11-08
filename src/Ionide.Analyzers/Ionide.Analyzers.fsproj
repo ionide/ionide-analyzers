@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
-        <ProjectReference Include="../../../FSharp.Analyzers.SDK/src/FSharp.Analyzers.SDK/FSharp.Analyzers.SDK.fsproj" />
+        <ProjectReference Include="$(LocalAnalyzersSDKRepo)/src/FSharp.Analyzers.SDK/FSharp.Analyzers.SDK.fsproj" />
     </ItemGroup>
 
     <ItemGroup>
