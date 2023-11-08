@@ -69,3 +69,8 @@ Please add [a new entry](https://keepachangelog.com/en/1.1.0/) for your changes.
 
 Unless, there are technical reason blocking us, we will try and ship your contribution as soon as possible.  
 Our CI process should pick up new version from the changelog and push new packages to NuGet.org once the code is on the `main` branch.
+
+## Using a local analyzers SDK
+
+You might run into a situation when the SDK packages don't provide the features you need for your analyzers development.  
+In such a case, you can edit the `Directory.Build.props` file and set `UseLocalAnalyzersSDK` to `true` and let `LocalAnalyzersSDKRepo` point to your local SDK repository.

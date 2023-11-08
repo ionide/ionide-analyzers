@@ -19,8 +19,15 @@
         <Compile Include="Style\SquareBracketArrayAnalyzer.fs"/>
     </ItemGroup>
 
+    <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
+        <ProjectReference Include="$(LocalAnalyzersSDKRepo)/src/FSharp.Analyzers.SDK/FSharp.Analyzers.SDK.fsproj" />
+    </ItemGroup>
+
     <ItemGroup>
         <PackageReference Update="FSharp.Core"/>
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'false'">
         <PackageReference Include="FSharp.Analyzers.SDK"/>
     </ItemGroup>
 
