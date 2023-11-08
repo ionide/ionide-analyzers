@@ -15,7 +15,7 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <DebugType>embedded</DebugType>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageProjectUrl>https://ionide.io/ionide-analyzers/</PackageProjectUrl>
         <PackageReleaseNotes>https://github.com/ionide/ionide-analyzers/blob/main/CHANGELOG.md</PackageReleaseNotes>
