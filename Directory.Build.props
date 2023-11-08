@@ -32,6 +32,7 @@
         <ServerGarbageCollection>true</ServerGarbageCollection>
         <LangVersion>preview</LangVersion>
         <OtherFlags>$(OtherFlags) --test:GraphBasedChecking --test:ParallelOptimization --test:ParallelIlxGen</OtherFlags>
+        <UseLocalAnalyzersSDK>false</UseLocalAnalyzersSDK>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(IsPackable)' == 'true'">
