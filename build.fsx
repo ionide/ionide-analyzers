@@ -1,4 +1,4 @@
-#r "nuget: Fun.Build, 1.0.2"
+#r "nuget: Fun.Build, 1.0.3"
 #r "nuget: Fake.IO.FileSystem, 6.0.0"
 #r "nuget: NuGet.Protocol, 6.7.0"
 #r "nuget: Ionide.KeepAChangelog, 0.1.8"
@@ -132,12 +132,15 @@ let getLatestChangeLogVersion () : SemanticVersion * DateTime * ChangelogData op
     |> List.sortByDescending (fun (_, d, _) -> d)
     |> List.head
 
+type CommandRunner =
+    abstract member LogWhenDryRun: string -> unit
+    abstract member RunCommand: string -> Async<Result<unit, string>>
+    abstract member RunCommandCaptureOutput: string -> Async<Result<string, string>>
+
 /// Push *.nupkg
-let releaseNuGetPackage (ctx: StageContext) (version: SemanticVersion, _, _) =
+let releaseNuGetPackage (ctx: CommandRunner) (version: SemanticVersion, _, _) =
     async {
         let key = Environment.GetEnvironmentVariable "NUGET_KEY"
-        printfn
-            $"dotnet nuget push bin/Ionide.Analyzers.%s{string version}.nupkg --api-key {key} --source \"https://api.nuget.org/v3/index.json\""
 
         let! result =
             ctx.RunCommand
@@ -161,47 +164,48 @@ let mapToGithubRelease (v: SemanticVersion, d: DateTime, cd: ChangelogData optio
     match cd with
     | None -> failwith "Each Ionide.Analyzers release is expected to have at least one section."
     | Some cd ->
-        let version = $"{v.Major}.{v.Minor}.{v.Patch}"
-        let title =
-            let month = d.ToString("MMMM")
-            let day = d.Day.Ordinalize()
-            $"{month} {day} Release"
 
-        let sections =
-            [
-                "Added", cd.Added
-                "Changed", cd.Changed
-                "Fixed", cd.Fixed
-                "Deprecated", cd.Deprecated
-                "Removed", cd.Removed
-                "Security", cd.Security
-                yield! (Map.toList cd.Custom)
-            ]
-            |> List.choose (fun (header, lines) ->
-                if lines.IsEmpty then
-                    None
-                else
-                    lines
-                    |> List.map (fun line -> line.TrimStart())
-                    |> String.concat "\n"
-                    |> sprintf "### %s\n%s" header
-                    |> Some
-            )
-            |> String.concat "\n\n"
+    let version = $"{v.Major}.{v.Minor}.{v.Patch}"
+    let title =
+        let month = d.ToString("MMMM")
+        let day = d.Day.Ordinalize()
+        $"{month} {day} Release"
 
-        let draft =
-            $"""# {version}
+    let sections =
+        [
+            "Added", cd.Added
+            "Changed", cd.Changed
+            "Fixed", cd.Fixed
+            "Deprecated", cd.Deprecated
+            "Removed", cd.Removed
+            "Security", cd.Security
+            yield! (Map.toList cd.Custom)
+        ]
+        |> List.choose (fun (header, lines) ->
+            if lines.IsEmpty then
+                None
+            else
+                lines
+                |> List.map (fun line -> line.TrimStart())
+                |> String.concat "\n"
+                |> sprintf "### %s\n%s" header
+                |> Some
+        )
+        |> String.concat "\n\n"
+
+    let draft =
+        $"""# {version}
 
 {sections}"""
 
-        {
-            Version = version
-            Title = title
-            Date = d
-            Draft = draft
-        }
+    {
+        Version = version
+        Title = title
+        Date = d
+        Draft = draft
+    }
 
-let getReleaseNotes (ctx: StageContext) (currentRelease: GithubRelease) (previousReleaseDate: string option) =
+let getReleaseNotes (ctx: CommandRunner) (currentRelease: GithubRelease) (previousReleaseDate: string option) =
     async {
         let closedFilter =
             match previousReleaseDate with
@@ -210,7 +214,7 @@ let getReleaseNotes (ctx: StageContext) (currentRelease: GithubRelease) (previou
 
         let! authorsStdOut =
             ctx.RunCommandCaptureOutput
-                $"gh pr list -S \"state:closed base:main %s{closedFilter} -author:app/robot -author:app/dependabot\" --json author"
+                $"gh pr list -S \"state:closed base:main %s{closedFilter} -author:app/robot -author:app/dependabot\" --json author --jq \".[].author.login\""
 
         let authorMsg =
             match authorsStdOut with
@@ -218,14 +222,9 @@ let getReleaseNotes (ctx: StageContext) (currentRelease: GithubRelease) (previou
             | Ok stdOut ->
 
             let authors =
-                let jsonDocument = JsonDocument.Parse(stdOut)
-                jsonDocument.RootElement.EnumerateArray()
-                |> Seq.map (fun item -> item.GetProperty("author").GetProperty("login").GetString())
-                |> Seq.distinct
-                |> Seq.sort
-                |> Seq.toArray
-
-            printfn "AUTHORS: %A" authors
+                stdOut.Split([| '\n' |], StringSplitOptions.RemoveEmptyEntries)
+                |> Array.distinct
+                |> Array.sort
 
             if authors.Length = 1 then
                 $"Special thanks to @%s{authors.[0]}!"
@@ -257,13 +256,14 @@ let getReleaseNotes (ctx: StageContext) (currentRelease: GithubRelease) (previou
 /// <param name="currentVersion">From the ChangeLog file.</param>
 /// <param name="previousReleaseDate">Filter used to find the users involved in the release. This will be passed a parameter to the GitHub CLI.</param>
 let mkGitHubRelease
-    (ctx: StageContext)
+    (ctx: CommandRunner)
     (currentVersion: SemanticVersion * DateTime * ChangelogData option)
     (previousReleaseDate: string option)
     =
     async {
         let ghReleaseInfo = mapToGithubRelease currentVersion
         let! notes = getReleaseNotes ctx ghReleaseInfo previousReleaseDate
+        ctx.LogWhenDryRun $"NOTES:\n%s{notes}"
         let noteFile = System.IO.Path.GetTempFileName()
         System.IO.File.WriteAllText(noteFile, notes)
         let file = $"./bin/Ionide.Analyzers.%s{ghReleaseInfo.Version}.nupkg"
@@ -286,17 +286,40 @@ pipeline "Release" {
         packStage
         run (fun ctx ->
             async {
+                let commandRunner =
+                    match ctx.TryGetCmdArg "--dry-run" with
+                    | ValueNone ->
+                        { new CommandRunner with
+                            member x.LogWhenDryRun _ = ()
+                            member x.RunCommand command = ctx.RunCommand command
+                            member x.RunCommandCaptureOutput command = ctx.RunCommandCaptureOutput command
+                        }
+                    | ValueSome _ ->
+                        { new CommandRunner with
+                            member x.LogWhenDryRun msg = printfn "%s" msg
+                            member x.RunCommand command =
+                                async {
+                                    printfn $"[dry-run]:{command}"
+                                    return Ok()
+                                }
+                            member x.RunCommandCaptureOutput command =
+                                async {
+                                    printfn $"[dry-run]:{command}"
+                                    return Ok "nojaf\ndawedawe\nbaronfel"
+                                }
+                        }
+
                 let currentVersion = getLatestChangeLogVersion ()
                 let currentVersionText, _, _ = currentVersion
                 let! latestNugetVersion = getLatestPublishedNugetVersion "Ionide.Analyzers" |> Async.AwaitTask
                 match latestNugetVersion with
                 | None ->
-                    let! nugetResult = releaseNuGetPackage ctx currentVersion
-                    let! githubResult = mkGitHubRelease ctx currentVersion None
+                    let! nugetResult = releaseNuGetPackage commandRunner currentVersion
+                    let! githubResult = mkGitHubRelease commandRunner currentVersion None
                     return nugetResult + githubResult
 
                 | Some nugetVersion when (nugetVersion.OriginalVersion <> string currentVersionText) ->
-                    let! nugetResult = releaseNuGetPackage ctx currentVersion
+                    let! nugetResult = releaseNuGetPackage commandRunner currentVersion
                     let! previousReleaseDate =
                         ctx.RunCommandCaptureOutput
                             $"gh release view v%s{nugetVersion.OriginalVersion} --json createdAt -t \"{{{{.createdAt}}}}\""
@@ -311,7 +334,7 @@ pipeline "Release" {
                             let lastIdx = output.LastIndexOf("Z", StringComparison.Ordinal)
                             Some(output.Substring(0, lastIdx))
 
-                    let! githubResult = mkGitHubRelease ctx currentVersion previousReleaseDate
+                    let! githubResult = mkGitHubRelease commandRunner currentVersion previousReleaseDate
                     return nugetResult + githubResult
 
                 | Some nugetVersion ->
