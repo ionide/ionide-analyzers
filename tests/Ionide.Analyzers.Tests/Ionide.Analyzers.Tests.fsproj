@@ -12,6 +12,7 @@
     <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzerTests.fs" />
     <Compile Include="Suggestion\IgnoreFunctionAnalyzerTests.fs" />
     <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzerTests.fs" />
+    <Compile Include="Suggestion\EmptyStringAnalyzerTests.fs" />
     <Compile Include="Style\SquareBracketArrayAnalyzerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
