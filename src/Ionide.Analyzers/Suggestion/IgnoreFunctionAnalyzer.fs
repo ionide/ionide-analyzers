@@ -7,7 +7,7 @@ open FSharp.Compiler.Text
 
 [<CliAnalyzer("IgnoreFunctionAnalyzer",
               "A function is being ignored. Did you mean to execute this?",
-              "https://ionide.io/ionide-analyzers/hints/003.html")>]
+              "https://ionide.io/ionide-analyzers/suggestion/003.html")>]
 let ignoreFunctionAnalyzer (ctx: CliContext) =
     async {
         let messages = ResizeArray<Message>()
