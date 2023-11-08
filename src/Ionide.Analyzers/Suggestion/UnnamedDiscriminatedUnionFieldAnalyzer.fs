@@ -6,7 +6,7 @@ open FSharp.Compiler.Syntax
 
 [<CliAnalyzer("UnnamedDiscriminatedUnionFieldAnalyzer",
               "Verifies each field in a union case is named.",
-              "https://ionide.io/ionide-analyzers/hints/004.html")>]
+              "https://ionide.io/ionide-analyzers/suggestion/004.html")>]
 let unnamedDiscriminatedUnionFieldAnalyzer (ctx: CliContext) =
     async {
         let messages = ResizeArray<Message>()
