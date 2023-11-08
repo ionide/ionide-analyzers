@@ -17,19 +17,19 @@ let unnamedDiscriminatedUnionFieldAnalyzer (ctx: CliContext) =
                     match unionCase with
                     | SynUnionCase(caseType = SynUnionCaseKind.Fields [ _ ]) -> ()
                     | SynUnionCase(caseType = SynUnionCaseKind.Fields fields) ->
-                        let unNamedFields =
+                        let unnamedFields =
                             fields
                             |> List.choose (fun (SynField(idOpt = idOpt; range = mField)) ->
                                 if Option.isNone idOpt then Some mField else None
                             )
 
-                        for mField in unNamedFields do
+                        for mField in unnamedFields do
                             messages.Add
                                 {
                                     Type = "UnnamedDiscriminatedUnionFieldAnalyzer"
                                     Message = "Field inside union case is not named!"
                                     Code = "004"
-                                    Severity = Severity.Error
+                                    Severity = Severity.Hint
                                     Range = mField
                                     Fixes = []
                                 }
