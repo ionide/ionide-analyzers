@@ -24,7 +24,7 @@ let ignoreFunctionAnalyzer (ctx: CliContext) =
                             {
                                 Type = "IgnoreFunctionAnalyzer"
                                 Message = "A function is being ignored. Did you mean to execute this?"
-                                Code = "003"
+                                Code = "IONIDE-003"
                                 Severity = Severity.Warning
                                 Range = m
                                 Fixes = []
