@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## 0.2.0 - 2023-11-09
 
 ### Fixed
 * Fix analyzers urls. [#19](https://github.com/ionide/ionide-analyzers/pull/19)
