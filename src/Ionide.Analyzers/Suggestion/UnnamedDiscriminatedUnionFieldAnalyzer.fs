@@ -28,7 +28,7 @@ let unnamedDiscriminatedUnionFieldAnalyzer (ctx: CliContext) =
                                 {
                                     Type = "UnnamedDiscriminatedUnionFieldAnalyzer"
                                     Message = "Field inside union case is not named!"
-                                    Code = "004"
+                                    Code = "IONIDE-004"
                                     Severity = Severity.Hint
                                     Range = mField
                                     Fixes = []
