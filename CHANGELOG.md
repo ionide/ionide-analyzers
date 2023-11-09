@@ -4,7 +4,7 @@
 
 ### Fixed
 * Fix analyzers urls. [#19](https://github.com/ionide/ionide-analyzers/pull/19)
-* Fix analyzers codes. [#21](https://github.com/ionide/ionide-analyzers/pull/21)
+* Fix analyzers codes. [#22](https://github.com/ionide/ionide-analyzers/pull/22)
 
 ### Added
 * Support for referencing a local analyzers SDK. [#18](https://github.com/ionide/ionide-analyzers/pull/18)
