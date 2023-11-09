@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## 0.2.0 - 2023-11-09
 
 ### Fixed
 * Fix analyzers urls. [#19](https://github.com/ionide/ionide-analyzers/pull/19)
@@ -8,6 +8,7 @@
 
 ### Added
 * Support for referencing a local analyzers SDK. [#18](https://github.com/ionide/ionide-analyzers/pull/18)
+* EmptyStringAnalyzer. [#20](https://github.com/ionide/ionide-analyzers/pull/20)
 
 ## 0.1.1 - 2023-11-07
 
