@@ -30,3 +30,19 @@ let a (b: string[]) = ()
         Assert.IsNotEmpty msgs
         Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0])
     }
+
+[<Test>]
+let ``int array in val sig`` () =
+    async {
+        let source =
+            """
+module M
+
+val a: b: int[] -> unit
+    """
+
+        let ctx = getContextForSignature projectOptions source
+        let! msgs = squareBracketArrayAnalyzer ctx
+        Assert.IsNotEmpty msgs
+        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0])
+    }
