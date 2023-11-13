@@ -14,6 +14,7 @@
         <PackageTags>F#, fsharp, analyzers</PackageTags>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryUrl>https://github.com/ionide/ionide-analyzers</RepositoryUrl>
         <DebugType>embedded</DebugType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
