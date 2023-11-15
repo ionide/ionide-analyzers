@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 - 2023-11-15
 
 ### Added
 * ReplaceOptionGetWithGracefulHandlingAnalyzer [#32](https://github.com/ionide/ionide-analyzers/pull/32)
