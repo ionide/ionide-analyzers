@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+* Reworks `ReplaceOptionGetWithGracefulHandlingAnalyzer` to handle ValueOption's and `.Value` member access. 
+
 ## 0.4.0 - 2023-11-15
 
 ### Added
