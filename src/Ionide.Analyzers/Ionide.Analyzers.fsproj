@@ -17,6 +17,7 @@
         <Compile Include="Suggestion\IgnoreFunctionAnalyzer.fs"/>
         <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzer.fs"/>
         <Compile Include="Suggestion\EmptyStringAnalyzer.fs"/>
+        <Compile Include="Suggestion\ReplaceOptionGetWithGracefulHandlingAnalyzer.fs"/>
         <Compile Include="Style\SquareBracketArrayAnalyzer.fs"/>
     </ItemGroup>
 
