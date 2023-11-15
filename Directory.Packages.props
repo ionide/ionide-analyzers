@@ -12,7 +12,7 @@
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'false'">
-    <PackageVersion Include="FSharp.Analyzers.SDK" Version="[0.20.0]" />
+    <PackageVersion Include="FSharp.Analyzers.SDK" Version="[0.20.1]" />
     <PackageVersion Include="FSharp.Analyzers.SDK.Testing" Version="[0.20.0]" />    
   </ItemGroup>
 </Project>
