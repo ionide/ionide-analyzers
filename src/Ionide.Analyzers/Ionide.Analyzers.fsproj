@@ -18,7 +18,7 @@
         <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzer.fs"/>
         <Compile Include="Suggestion\EmptyStringAnalyzer.fs"/>
         <Compile Include="Suggestion\HandleOptionGracefullyAnalyzer.fs"/>
-        <Compile Include="Style\SquareBracketArrayAnalyzer.fs"/>
+        <Compile Include="Style\PostfixGenericsAnalyzer.fs"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
