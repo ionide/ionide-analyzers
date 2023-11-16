@@ -16,147 +16,231 @@ let Setup () =
     }
 
 [<Test>]
-let ``array in binding`` () =
+let ``array should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 let a (b: int[]) = ()
+let b: int[] = Array.empty
     """
 
+        let message = "Prefer postfix syntax for arrays."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
-let ``alt array in binding`` () =
+let ``alt array should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 let a (b: array<int>) = ()
+let b: array<int> = Array.empty
     """
 
+        let message = "Prefer postfix syntax for arrays."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
-let ``array in val sig`` () =
+let ``array in val sig should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 val a: b: int[] -> unit
+val b: int[]
     """
 
+        let message = "Prefer postfix syntax for arrays."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
-let ``option in binding`` () =
+let ``alt array in val sig should produce diagnostic`` () =
+    async {
+        let source =
+            """
+module M
+
+val a: b: array<int> -> unit
+val b: array<int>
+    """
+
+        let message = "Prefer postfix syntax for arrays."
+        let ctx = getContextForSignature projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.IsNotEmpty msgs
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
+    }
+
+[<Test>]
+let ``option should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 let a (b: option<int>) = ()
+let b: option<int> = None
     """
 
+        let message = "Prefer postfix syntax for options."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for options." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
-let ``option in val sig`` () =
+let ``option in val sig should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 val a: b: option<int> -> unit
+val b: option<int>
     """
 
+        let message = "Prefer postfix syntax for options."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for options." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
-let ``value option in binding`` () =
+let ``value option should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 let a (b: voption<int>) = ()
+let b: voption<int> = ValueNone
     """
 
+        let message = "Prefer postfix syntax for value options."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for value options." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
-let ``value option in val sig`` () =
+let ``value option in val sig should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 val a: b: voption<int> -> unit
+val b: voption<int>
     """
 
+        let message = "Prefer postfix syntax for value options."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for value options." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
-let ``reference cell in binding`` () =
+let ``reference cell should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 let a (b: ref<int>) = ()
+let b: ref<int> = ref 0
     """
 
+        let message = "Prefer postfix syntax for reference cells."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for reference cells." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
-let ``reference cell in val sig`` () =
+let ``alt reference cell should produce diagnostic`` () =
+    async {
+        let source =
+            """
+module M
+
+let a (b: Ref<int>) = ()
+let b: Ref<int> = ref 0
+    """
+
+        let message = "Prefer postfix syntax for reference cells."
+        let ctx = getContext projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.IsNotEmpty msgs
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
+    }
+
+[<Test>]
+let ``reference cell in val sig should produce diagnostic`` () =
     async {
         let source =
             """
 module M
 
 val a: b: ref<int> -> unit
+val b: ref<int>
     """
 
+        let message = "Prefer postfix syntax for reference cells."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
         Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for reference cells." msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
+    }
+
+[<Test>]
+let ``alt reference cell in val sig should produce diagnostic`` () =
+    async {
+        let source =
+            """
+module M
+
+val a: b: Ref<int> -> unit
+val b: Ref<int>
+    """
+
+        let message = "Prefer postfix syntax for reference cells."
+        let ctx = getContextForSignature projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.IsNotEmpty msgs
+        Assert.IsTrue(Assert.messageContains message msgs[0])
+        Assert.IsTrue(Assert.messageContains message msgs[1])
     }
 
 [<Test>]
