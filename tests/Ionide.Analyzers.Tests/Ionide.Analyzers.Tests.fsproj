@@ -13,7 +13,7 @@
     <Compile Include="Suggestion\IgnoreFunctionAnalyzerTests.fs" />
     <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzerTests.fs" />
     <Compile Include="Suggestion\EmptyStringAnalyzerTests.fs" />
-    <Compile Include="Suggestion\ReplaceOptionGetWithGracefulHandlingAnalyzerTests.fs" />
+    <Compile Include="Suggestion\HandleOptionGracefullyAnalyzerTests.fs" />
     <Compile Include="Style\SquareBracketArrayAnalyzerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
