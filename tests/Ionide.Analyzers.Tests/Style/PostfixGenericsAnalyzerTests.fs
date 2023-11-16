@@ -158,3 +158,42 @@ val a: b: ref<int> -> unit
         Assert.IsNotEmpty msgs
         Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for reference cells." msgs[0])
     }
+
+[<Test>]
+let ``postfix generics should not trigger diagnostic`` () =
+    async {
+        let source =
+            """
+module M
+
+let a (name: int array) = ()
+let b (name: int list) = ()
+let c (name: int seq) = ()
+let d (name: int option) = ()
+let e (name: int voption) = ()
+let f (name: int ref) = ()
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.IsEmpty msgs
+    }
+
+let ``postfix generics should not trigger diagnostic in sig file`` () =
+    async {
+        let source =
+            """
+module M
+
+val a: name: int array -> unit
+val b: name: int list -> unit
+val c: name: int seq -> unit
+val d: name: int option -> unit
+val e: name: int voption -> unit
+val f: name: int ref -> unit
+    """
+
+        let ctx = getContextForSignature projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.IsEmpty msgs
+    }
