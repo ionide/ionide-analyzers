@@ -31,7 +31,7 @@ let optionGetAnalyzer (ctx: CliContext) =
                                 Type = "HandleOptionGracefully"
                                 Message = "Replace unsafe option unwrapping with graceful handling of each case."
                                 Code = "IONIDE-006"
-                                Severity = Severity.Hint
+                                Severity = Severity.Warning
                                 Range = m
                                 Fixes = []
                             }
