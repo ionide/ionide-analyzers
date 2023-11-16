@@ -18,20 +18,17 @@ let postfixGenericsAnalyzer: Analyzer<CliContext> =
                     override x.WalkType(t: SynType) =
                         match t with
                         | SynType.Array _ -> ts.Add("Prefer postfix syntax for arrays.", t.Range)
-                        | SynType.App(typeName, _, _, _, _, false, _) ->
-                            match typeName with
-                            | SynType.LongIdent synLongIdent ->
-                                match synLongIdent.LongIdent with
-                                | [ ident ] ->
-                                    match ident.idText with
-                                    | "array" -> ts.Add("Prefer postfix syntax for arrays.", t.Range)
-                                    | "seq" -> ts.Add("Prefer postfix syntax for sequences.", t.Range)
-                                    | "list" -> ts.Add("Prefer postfix syntax for lists.", t.Range)
-                                    | "option" -> ts.Add("Prefer postfix syntax for options.", t.Range)
-                                    | "voption" -> ts.Add("Prefer postfix syntax for value options.", t.Range)
-                                    | "Ref"
-                                    | "ref" -> ts.Add("Prefer postfix syntax for reference cells.", t.Range)
-                                    | _ -> ()
+                        | SynType.App(SynType.LongIdent synLongIdent, _, _, _, _, false, _) ->
+                            match synLongIdent.LongIdent with
+                            | [ ident ] ->
+                                match ident.idText with
+                                | "array" -> ts.Add("Prefer postfix syntax for arrays.", t.Range)
+                                | "seq" -> ts.Add("Prefer postfix syntax for sequences.", t.Range)
+                                | "list" -> ts.Add("Prefer postfix syntax for lists.", t.Range)
+                                | "option" -> ts.Add("Prefer postfix syntax for options.", t.Range)
+                                | "voption" -> ts.Add("Prefer postfix syntax for value options.", t.Range)
+                                | "Ref"
+                                | "ref" -> ts.Add("Prefer postfix syntax for reference cells.", t.Range)
                                 | _ -> ()
                             | _ -> ()
                         | _ -> ()
