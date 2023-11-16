@@ -43,7 +43,7 @@ let postfixGenericsAnalyzer: Analyzer<CliContext> =
                 ts
                 |> Seq.map (fun (message, range) ->
                     {
-                        Type = "SquareBracketArrayAnalyzer"
+                        Type = "PostfixGenericsAnalyzer"
                         Message = message
                         Code = "IONIDE-002"
                         Severity = Info
