@@ -244,6 +244,23 @@ val b: Ref<int>
     }
 
 [<Test>]
+let ``nested generics should produce diagnostic`` () =
+    async {
+        let source =
+            """
+module M
+
+let a: array<list<int>> = Array.empty
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.IsNotEmpty msgs
+        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0])
+        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for lists." msgs[1])
+    }
+
+[<Test>]
 let ``postfix generics should not trigger diagnostic`` () =
     async {
         let source =
