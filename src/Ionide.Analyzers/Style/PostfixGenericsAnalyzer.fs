@@ -18,7 +18,7 @@ let postfixGenericsAnalyzer: Analyzer<CliContext> =
                     override x.WalkType(t: SynType) =
                         match t with
                         | SynType.Array _ -> ts.Add("Prefer postfix syntax for arrays.", t.Range)
-                        | SynType.App(SynType.LongIdent synLongIdent, _, _, _, _, false, _) ->
+                        | SynType.App(typeName = SynType.LongIdent synLongIdent; isPostfix = false) ->
                             match synLongIdent.LongIdent with
                             | [ ident ] ->
                                 match ident.idText with
