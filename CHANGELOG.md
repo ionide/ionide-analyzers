@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Changed
-* Reworks `ReplaceOptionGetWithGracefulHandlingAnalyzer` to handle ValueOption's and `.Value` member access. 
+* Reworks `ReplaceOptionGetWithGracefulHandlingAnalyzer` to handle ValueOption's and `.Value` member access. [#33](https://github.com/ionide/ionide-analyzers/pull/33) 
+* Reworks `SquareBracketArrayAnalyzer` to handle all generic types that should be postfixed. [#39](https://github.com/ionide/ionide-analyzers/pull/39)
 
 ## 0.4.0 - 2023-11-15
 

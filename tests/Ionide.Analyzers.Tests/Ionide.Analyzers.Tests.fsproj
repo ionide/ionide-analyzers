@@ -14,7 +14,7 @@
     <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzerTests.fs" />
     <Compile Include="Suggestion\EmptyStringAnalyzerTests.fs" />
     <Compile Include="Suggestion\HandleOptionGracefullyAnalyzerTests.fs" />
-    <Compile Include="Style\SquareBracketArrayAnalyzerTests.fs" />
+    <Compile Include="Style\PostfixGenericsAnalyzerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
