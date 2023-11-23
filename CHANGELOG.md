@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 - 2023-11-23
 
 ### Changed
 * Reworks `ReplaceOptionGetWithGracefulHandlingAnalyzer` to handle ValueOption's and `.Value` member access. [#33](https://github.com/ionide/ionide-analyzers/pull/33) 
 * Reworks `SquareBracketArrayAnalyzer` to handle all generic types that should be postfixed. [#39](https://github.com/ionide/ionide-analyzers/pull/39)
+* Update FSharp.Analyzers.SDK to `0.21.0`. [#45](https://github.com/ionide/ionide-analyzers/pull/45)
 
 ## 0.4.0 - 2023-11-15
 
