@@ -22,37 +22,6 @@ open Humanizer
 
 let cleanDirs globExpr = (!!globExpr) |> Shell.cleanDirs
 
-/// Workaround for https://github.com/dotnet/sdk/issues/35989
-let restoreTools (ctx: StageContext) =
-    async {
-        let json = File.readAsString ".config/dotnet-tools.json"
-        let jsonDocument = JsonDocument.Parse(json)
-        let root = jsonDocument.RootElement
-        let tools = root.GetProperty("tools")
-
-        let! installs =
-            tools.EnumerateObject()
-            |> Seq.map (fun tool ->
-                let version = tool.Value.GetProperty("version").GetString()
-                ctx.RunCommand $"dotnet tool install %s{tool.Name} --version %s{version}"
-            )
-            |> Async.Sequential
-
-        let failedInstalls =
-            installs
-            |> Array.tryPick (
-                function
-                | Ok _ -> None
-                | Error error -> Some error
-            )
-
-        match failedInstalls with
-        | None -> return 0
-        | Some error ->
-            printfn $"%s{error}"
-            return 1
-    }
-
 let packStage =
     stage "pack" { run "dotnet pack ./src/Ionide.Analyzers/Ionide.Analyzers.fsproj -c Release -o bin" }
 
@@ -71,7 +40,7 @@ pipeline "Build" {
         )
     }
     stage "lint" {
-        run restoreTools
+        run "dotnet tool restore"
         run "dotnet fantomas . --check"
     }
     stage "restore" { run "dotnet restore" }
@@ -100,7 +69,7 @@ pipeline "Docs" {
                 "DOTNET_ROLL_FORWARD_TO_PRERELEASE", "1"
                 "DOTNET_ROLL_FORWARD", "LatestMajor"
             |]
-        run restoreTools
+        run "dotnet tool restore"
         run "dotnet fsdocs watch --port 7890"
     }
     runIfOnlySpecified true
