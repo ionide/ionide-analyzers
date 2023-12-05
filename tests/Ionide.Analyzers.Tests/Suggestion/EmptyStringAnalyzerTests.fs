@@ -138,3 +138,21 @@ let x = s.Length = 0
         let! msgs = emptyStringCliAnalyzer ctx
         Assert.IsEmpty msgs
     }
+
+[<Test>]
+let ``Handle types without a FullName gracefully`` () =
+    async {
+        let source =
+            """
+module M
+
+let f () =
+    let mutable bom = Array.zeroCreate 3
+    let mutable bom2 = Array.zeroCreate 3
+    bom = bom2
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = emptyStringCliAnalyzer ctx
+        Assert.IsEmpty msgs
+    }

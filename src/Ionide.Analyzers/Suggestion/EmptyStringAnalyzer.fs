@@ -6,12 +6,11 @@ open FSharp.Compiler.Symbols
 open FSharp.Compiler.Text
 
 let (|EmptyStringConst|_|) (e: FSharpExpr) =
-    if e.Type.ErasedType.BasicQualifiedName = "System.String" then
-        match e with
-        | FSharpExprPatterns.Const(o, _type) when not (isNull o) && (string o).Length = 0 -> Some()
-        | _ -> None
-    else
-        None
+    let name = e.Type.ErasedType.TypeDefinition.TryGetFullName()
+
+    match name, e with
+    | Some("System.String"), FSharpExprPatterns.Const(o, _type) when not (isNull o) && (string o).Length = 0 -> Some()
+    | _ -> None
 
 let invalidStringFunctionUseAnalyzer (typedTree: FSharpImplementationFileContents) =
     let ranges = ResizeArray<range>()
