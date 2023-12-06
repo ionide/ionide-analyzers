@@ -19,7 +19,7 @@ let optionGetAnalyzer (ctx: CliContext) =
                     let fullyQualifiedCall =
                         let fullName =
                             mfv.DeclaringEntity
-                            |> Option.map (fun e -> e.TryFullName)
+                            |> Option.map (fun e -> e.TryGetFullName())
                             |> Option.flatten
                             |> Option.defaultValue ""
 
