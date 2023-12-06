@@ -4,6 +4,7 @@
 
 ### Fixed
 * Handle types without a FullName more gracefully in the EmptyStringAnalyzer. [#48](https://github.com/ionide/ionide-analyzers/pull/48)
+* Handle types without a FullName more gracefully in the HandleOptionGracefullyAnalyzer. [#50](https://github.com/ionide/ionide-analyzers/pull/50)
 
 ## 0.5.0 - 2023-11-23
 
