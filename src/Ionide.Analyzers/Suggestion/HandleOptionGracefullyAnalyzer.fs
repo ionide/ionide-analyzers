@@ -17,7 +17,13 @@ let optionGetAnalyzer (ctx: CliContext) =
             { new TypedTreeCollectorBase() with
                 override x.WalkCall _ (mfv: FSharpMemberOrFunctionOrValue) _ _ (args: FSharpExpr list) (m: range) =
                     let fullyQualifiedCall =
-                        String.Join(".", mfv.DeclaringEntity.Value.FullName, mfv.DisplayName)
+                        let fullName =
+                            mfv.DeclaringEntity
+                            |> Option.map (fun e -> e.TryFullName)
+                            |> Option.flatten
+                            |> Option.defaultValue ""
+
+                        String.Join(".", fullName, mfv.DisplayName)
 
                     if
                         (mfv.FullName = "Microsoft.FSharp.Core.Option.get"
