@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## 0.5.1 - 2023-12-06
 
 ### Fixed
 * Handle types without a FullName more gracefully in the EmptyStringAnalyzer. [#48](https://github.com/ionide/ionide-analyzers/pull/48)
