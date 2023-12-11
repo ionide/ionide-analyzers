@@ -30,8 +30,8 @@ let value = Option.get option
 
         let ctx = getContext projectOptions source
         let! msgs = optionGetAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains messageString msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains messageString msgs[0], Is.True)
     }
 
 [<Test>]
@@ -47,8 +47,8 @@ let value = ValueOption.get voption
 
         let ctx = getContext projectOptions source
         let! msgs = optionGetAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains messageString msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains messageString msgs[0], Is.True)
     }
 
 [<Test>]
@@ -64,8 +64,8 @@ let value = option.Value
 
         let ctx = getContext projectOptions source
         let! msgs = optionGetAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains messageString msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains messageString msgs[0], Is.True)
     }
 
 [<Test>]
@@ -81,6 +81,6 @@ let value = voption.Value
 
         let ctx = getContext projectOptions source
         let! msgs = optionGetAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains messageString msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains messageString msgs[0], Is.True)
     }

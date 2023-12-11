@@ -29,8 +29,12 @@ ignore a
 
         let ctx = getContext projectOptions source
         let! msgs = ignoreFunctionAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "A function is being ignored. Did you mean to execute this?" msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+
+        Assert.That(
+            Assert.messageContains "A function is being ignored. Did you mean to execute this?" msgs[0],
+            Is.True
+        )
     }
 
 [<Test>]
@@ -48,8 +52,12 @@ channel.Writer.Complete |> ignore
 
         let ctx = getContext projectOptions source
         let! msgs = ignoreFunctionAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "A function is being ignored. Did you mean to execute this?" msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+
+        Assert.That(
+            Assert.messageContains "A function is being ignored. Did you mean to execute this?" msgs[0],
+            Is.True
+        )
     }
 
 [<Test>]
@@ -64,6 +72,10 @@ ignore<int -> int -> int> (+)
 
         let ctx = getContext projectOptions source
         let! msgs = ignoreFunctionAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "A function is being ignored. Did you mean to execute this?" msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+
+        Assert.That(
+            Assert.messageContains "A function is being ignored. Did you mean to execute this?" msgs[0],
+            Is.True
+        )
     }

@@ -28,12 +28,13 @@ let x = s = ""
 
         let ctx = getContext projectOptions source
         let! msgs = emptyStringCliAnalyzer ctx
-        Assert.IsNotEmpty msgs
+        Assert.That(msgs, Is.Not.Empty)
 
-        Assert.IsTrue(
+        Assert.That(
             Assert.messageContains
                 "Test for empty strings should use the String.Length property or the String.IsNullOrEmpty method."
-                msgs[0]
+                msgs[0],
+            Is.True
         )
     }
 
@@ -50,12 +51,13 @@ let x = "" = s
 
         let ctx = getContext projectOptions source
         let! msgs = emptyStringCliAnalyzer ctx
-        Assert.IsNotEmpty msgs
+        Assert.That(msgs, Is.Not.Empty)
 
-        Assert.IsTrue(
+        Assert.That(
             Assert.messageContains
                 "Test for empty strings should use the String.Length property or the String.IsNullOrEmpty method."
-                msgs[0]
+                msgs[0],
+            Is.True
         )
     }
 
@@ -72,7 +74,7 @@ let x = s = "bar"
 
         let ctx = getContext projectOptions source
         let! msgs = emptyStringCliAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -88,7 +90,7 @@ let x = "bar" = s
 
         let ctx = getContext projectOptions source
         let! msgs = emptyStringCliAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -104,7 +106,7 @@ let x = s = null
 
         let ctx = getContext projectOptions source
         let! msgs = emptyStringCliAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -120,7 +122,7 @@ let x = null = s
 
         let ctx = getContext projectOptions source
         let! msgs = emptyStringCliAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -136,7 +138,7 @@ let x = s.Length = 0
 
         let ctx = getContext projectOptions source
         let! msgs = emptyStringCliAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -154,5 +156,5 @@ let f () =
 
         let ctx = getContext projectOptions source
         let! msgs = emptyStringCliAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }
