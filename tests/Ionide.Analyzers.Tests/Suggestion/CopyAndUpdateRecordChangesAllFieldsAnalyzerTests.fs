@@ -29,8 +29,8 @@ let updated = { a with A = 2 }
 
         let ctx = getContext projectOptions source
         let! msgs = copyAndUpdateRecordChangesAllFieldsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "All record fields of record are being updated" msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains "All record fields of record are being updated" msgs[0], Is.True)
     }
 
 [<Test>]
@@ -47,8 +47,8 @@ let updated = { a with A = 2; B = 4; C = 5 }
 
         let ctx = getContext projectOptions source
         let! msgs = copyAndUpdateRecordChangesAllFieldsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "All record fields of record are being updated" msgs[0])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains "All record fields of record are being updated" msgs[0], Is.True)
     }
 
 [<Test>]
@@ -65,5 +65,5 @@ let updated = { a with A = 2; B = 4 }
 
         let ctx = getContext projectOptions source
         let! msgs = copyAndUpdateRecordChangesAllFieldsAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }

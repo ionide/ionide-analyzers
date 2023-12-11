@@ -29,9 +29,9 @@ let b: int[] = Array.empty
         let message = "Prefer postfix syntax for arrays."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -48,9 +48,9 @@ let b: array<int> = Array.empty
         let message = "Prefer postfix syntax for arrays."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -67,9 +67,9 @@ val b: int[]
         let message = "Prefer postfix syntax for arrays."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -86,9 +86,9 @@ val b: array<int>
         let message = "Prefer postfix syntax for arrays."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -105,9 +105,9 @@ let b: option<int> = None
         let message = "Prefer postfix syntax for options."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -124,9 +124,9 @@ val b: option<int>
         let message = "Prefer postfix syntax for options."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -143,9 +143,9 @@ let b: voption<int> = ValueNone
         let message = "Prefer postfix syntax for value options."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -162,9 +162,9 @@ val b: voption<int>
         let message = "Prefer postfix syntax for value options."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -181,9 +181,9 @@ let b: ref<int> = ref 0
         let message = "Prefer postfix syntax for reference cells."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -200,9 +200,9 @@ let b: Ref<int> = ref 0
         let message = "Prefer postfix syntax for reference cells."
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -219,9 +219,9 @@ val b: ref<int>
         let message = "Prefer postfix syntax for reference cells."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -238,9 +238,9 @@ val b: Ref<int>
         let message = "Prefer postfix syntax for reference cells."
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains message msgs[0])
-        Assert.IsTrue(Assert.messageContains message msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains message msgs.[0], Is.True)
+        Assert.That(Assert.messageContains message msgs.[1], Is.True)
     }
 
 [<Test>]
@@ -255,9 +255,9 @@ let a: array<list<int>> = Array.empty
 
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsNotEmpty msgs
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0])
-        Assert.IsTrue(Assert.messageContains "Prefer postfix syntax for lists." msgs[1])
+        Assert.That(msgs, Is.Not.Empty)
+        Assert.That(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0], Is.True)
+        Assert.That(Assert.messageContains "Prefer postfix syntax for lists." msgs[1], Is.True)
     }
 
 [<Test>]
@@ -277,7 +277,7 @@ let f (name: int ref) = ()
 
         let ctx = getContext projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }
 
 let ``postfix generics should not trigger diagnostic in sig file`` () =
@@ -296,5 +296,5 @@ val f: name: int ref -> unit
 
         let ctx = getContextForSignature projectOptions source
         let! msgs = postfixGenericsAnalyzer ctx
-        Assert.IsEmpty msgs
+        Assert.That(msgs, Is.Empty)
     }
