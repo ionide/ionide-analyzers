@@ -20,7 +20,7 @@ let copyAndUpdateRecordChangesAllFieldsAnalyzer: Analyzer<CliContext> =
 
                 let collector =
                     { new SyntaxCollectorBase() with
-                        override x.WalkExpr(e: SynExpr) =
+                        override x.WalkExpr(_, e: SynExpr) =
                             match e with
                             | SynExpr.Record(copyInfo = Some _; recordFields = fields) -> xs.Add(fields, e.Range)
                             | _ -> ()
