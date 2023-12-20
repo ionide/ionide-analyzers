@@ -15,7 +15,7 @@ let postfixGenericsAnalyzer: Analyzer<CliContext> =
 
             let collector =
                 { new SyntaxCollectorBase() with
-                    override x.WalkType(t: SynType) =
+                    override x.WalkType(_, t: SynType) =
                         match t with
                         | SynType.Array _ -> ts.Add("Prefer postfix syntax for arrays.", t.Range)
                         | SynType.App(typeName = SynType.LongIdent synLongIdent; isPostfix = false) ->

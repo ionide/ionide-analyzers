@@ -13,7 +13,7 @@ let unnamedDiscriminatedUnionFieldAnalyzer (ctx: CliContext) =
 
         let visitor =
             { new SyntaxCollectorBase() with
-                override x.WalkUnionCase(unionCase: SynUnionCase) =
+                override x.WalkUnionCase(_, unionCase: SynUnionCase) =
                     match unionCase with
                     | SynUnionCase(caseType = SynUnionCaseKind.Fields [ _ ]) -> ()
                     | SynUnionCase(caseType = SynUnionCaseKind.Fields fields) ->
