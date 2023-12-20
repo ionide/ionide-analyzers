@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 - 2023-12-20
 
 ### Changed
 * Update FSharp.Analyzers.SDK to `0.22.0`. [#60](https://github.com/ionide/ionide-analyzers/pull/60)
