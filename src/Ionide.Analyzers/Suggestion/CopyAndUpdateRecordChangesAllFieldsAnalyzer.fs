@@ -58,14 +58,20 @@ let analyze parseTree (typedTree: FSharpImplementationFileContents option) =
 
     Seq.toList messages
 
-[<CliAnalyzer("CopyAndUpdateRecordChangesAllFieldsAnalyzer",
-              "Detect if all fields in a record update expression are updated.",
-              "https://ionide.io/ionide-analyzers/suggestion/001.html")>]
+[<Literal>]
+let name = "CopyAndUpdateRecordChangesAllFieldsAnalyzer"
+
+[<Literal>]
+let shortDescription =
+    "Detect if all fields in a record update expression are updated."
+
+[<Literal>]
+let helpUri = "https://ionide.io/ionide-analyzers/suggestion/001.html"
+
+[<CliAnalyzer(name, shortDescription, helpUri)>]
 let copyAndUpdateRecordChangesAllFieldsCliAnalyzer: Analyzer<CliContext> =
     fun (context: CliContext) -> async { return analyze context.ParseFileResults.ParseTree context.TypedTree }
 
-[<EditorAnalyzer("CopyAndUpdateRecordChangesAllFieldsAnalyzer",
-                 "Detect if all fields in a record update expression are updated.",
-                 "https://ionide.io/ionide-analyzers/suggestion/001.html")>]
+[<EditorAnalyzer(name, shortDescription, helpUri)>]
 let copyAndUpdateRecordChangesAllFieldsEditorAnalyzer: Analyzer<EditorContext> =
     fun (context: EditorContext) -> async { return analyze context.ParseFileResults.ParseTree context.TypedTree }

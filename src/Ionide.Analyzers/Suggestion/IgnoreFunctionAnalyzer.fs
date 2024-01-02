@@ -33,12 +33,17 @@ let analyzer (typedTree: FSharpImplementationFileContents option) =
         walkTast tastCollector typedTree
         Seq.toList messages
 
-[<CliAnalyzer("IgnoreFunctionAnalyzer",
-              "A function is being ignored. Did you mean to execute this?",
-              "https://ionide.io/ionide-analyzers/suggestion/003.html")>]
+[<Literal>]
+let name = "IgnoreFunctionAnalyzer"
+
+[<Literal>]
+let shortDescription = "A function is being ignored. Did you mean to execute this?"
+
+[<Literal>]
+let helpUri = "https://ionide.io/ionide-analyzers/suggestion/003.html"
+
+[<CliAnalyzer(name, shortDescription, helpUri)>]
 let ignoreFunctionCliAnalyzer (ctx: CliContext) = async { return analyzer ctx.TypedTree }
 
-[<EditorAnalyzer("IgnoreFunctionAnalyzer",
-                 "A function is being ignored. Did you mean to execute this?",
-                 "https://ionide.io/ionide-analyzers/suggestion/003.html")>]
+[<EditorAnalyzer(name, shortDescription, helpUri)>]
 let ignoreFunctionEditorAnalyzer (ctx: EditorContext) = async { return analyzer ctx.TypedTree }

@@ -37,14 +37,19 @@ let analyze parseTree =
 
     Seq.toList messages
 
-[<CliAnalyzer("UnnamedDiscriminatedUnionFieldAnalyzer",
-              "Verifies each field in a union case is named.",
-              "https://ionide.io/ionide-analyzers/suggestion/004.html")>]
+[<Literal>]
+let name = "UnnamedDiscriminatedUnionFieldAnalyzer"
+
+[<Literal>]
+let shortDescription = "Verifies each field in a union case is named."
+
+[<Literal>]
+let helpUri = "https://ionide.io/ionide-analyzers/suggestion/004.html"
+
+[<CliAnalyzer(name, shortDescription, helpUri)>]
 let unnamedDiscriminatedUnionFieldCliAnalyzer (ctx: CliContext) =
     async { return analyze ctx.ParseFileResults.ParseTree }
 
-[<EditorAnalyzer("UnnamedDiscriminatedUnionFieldAnalyzer",
-                 "Verifies each field in a union case is named.",
-                 "https://ionide.io/ionide-analyzers/suggestion/004.html")>]
+[<EditorAnalyzer(name, shortDescription, helpUri)>]
 let unnamedDiscriminatedUnionFieldEditorAnalyzer (ctx: EditorContext) =
     async { return analyze ctx.ParseFileResults.ParseTree }

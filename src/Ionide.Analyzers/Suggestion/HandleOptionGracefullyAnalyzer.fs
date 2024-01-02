@@ -45,12 +45,18 @@ let analyze (typedTree: FSharpImplementationFileContents option) =
         walkTast walker typedTree
         Seq.toList messages
 
-[<CliAnalyzer("HandleOptionGracefullyAnalyzer",
-              "Replace unsafe option unwrapping with graceful handling of each case.",
-              "https://ionide.io/ionide-analyzers/suggestion/006.html")>]
+[<Literal>]
+let name = "HandleOptionGracefullyAnalyzer"
+
+[<Literal>]
+let shortDescription =
+    "Replace unsafe option unwrapping with graceful handling of each case."
+
+[<Literal>]
+let helpUri = "https://ionide.io/ionide-analyzers/suggestion/006.html"
+
+[<CliAnalyzer(name, shortDescription, helpUri)>]
 let optionGetCliAnalyzer (ctx: CliContext) = async { return analyze ctx.TypedTree }
 
-[<EditorAnalyzer("HandleOptionGracefullyAnalyzer",
-                 "Replace unsafe option unwrapping with graceful handling of each case.",
-                 "https://ionide.io/ionide-analyzers/suggestion/006.html")>]
+[<EditorAnalyzer(name, shortDescription, helpUri)>]
 let optionGetEditorAnalyzer (ctx: EditorContext) = async { return analyze ctx.TypedTree }

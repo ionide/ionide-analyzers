@@ -41,14 +41,19 @@ let analyze (typedTree: FSharpImplementationFileContents) =
     )
     |> Seq.toList
 
-[<EditorAnalyzer("EmptyStringAnalyzer",
-                 "Verifies testing for an empty string is done efficiently.",
-                 "https://ionide.io/ionide-analyzers/suggestion/005.html")>]
+[<Literal>]
+let name = "EmptyStringAnalyzer"
+
+[<Literal>]
+let shortDescription = "Verifies testing for an empty string is done efficiently."
+
+[<Literal>]
+let helpUri = "https://ionide.io/ionide-analyzers/suggestion/005.html"
+
+[<EditorAnalyzer(name, shortDescription, helpUri)>]
 let emptyStringEditorAnalyzer (ctx: EditorContext) =
     async { return ctx.TypedTree |> Option.map analyze |> Option.defaultValue [] }
 
-[<CliAnalyzer("EmptyStringAnalyzer",
-              "Verifies testing for an empty string is done efficiently.",
-              "https://ionide.io/ionide-analyzers/suggestion/005.html")>]
+[<CliAnalyzer(name, shortDescription, helpUri)>]
 let emptyStringCliAnalyzer (ctx: CliContext) =
     async { return ctx.TypedTree |> Option.map analyze |> Option.defaultValue [] }
