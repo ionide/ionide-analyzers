@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1 - 2024-01-01
+
+### Added
+* Add editor support to all analyzers. [#64](https://github.com/ionide/ionide-analyzers/pull/64)
+
 ## 0.6.0 - 2023-12-20
 
 ### Changed

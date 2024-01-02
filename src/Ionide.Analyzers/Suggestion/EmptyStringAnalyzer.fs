@@ -12,7 +12,7 @@ let (|EmptyStringConst|_|) (e: FSharpExpr) =
     | Some("System.String"), FSharpExprPatterns.Const(o, _type) when not (isNull o) && (string o).Length = 0 -> Some()
     | _ -> None
 
-let invalidStringFunctionUseAnalyzer (typedTree: FSharpImplementationFileContents) =
+let analyze (typedTree: FSharpImplementationFileContents) =
     let ranges = ResizeArray<range>()
 
     let walker =
@@ -41,24 +41,19 @@ let invalidStringFunctionUseAnalyzer (typedTree: FSharpImplementationFileContent
     )
     |> Seq.toList
 
-[<EditorAnalyzer("EmptyStringAnalyzer",
-                 "Verifies testing for an empty string is done efficiently.",
-                 "https://ionide.io/ionide-analyzers/suggestion/005.html")>]
-let emptyStringEditorAnalyzer (ctx: EditorContext) =
-    async {
-        return
-            ctx.TypedTree
-            |> Option.map invalidStringFunctionUseAnalyzer
-            |> Option.defaultValue []
-    }
+[<Literal>]
+let name = "EmptyStringAnalyzer"
 
-[<CliAnalyzer("EmptyStringAnalyzer",
-              "Verifies testing for an empty string is done efficiently.",
-              "https://ionide.io/ionide-analyzers/suggestion/005.html")>]
+[<Literal>]
+let shortDescription = "Verifies testing for an empty string is done efficiently."
+
+[<Literal>]
+let helpUri = "https://ionide.io/ionide-analyzers/suggestion/005.html"
+
+[<EditorAnalyzer(name, shortDescription, helpUri)>]
+let emptyStringEditorAnalyzer (ctx: EditorContext) =
+    async { return ctx.TypedTree |> Option.map analyze |> Option.defaultValue [] }
+
+[<CliAnalyzer(name, shortDescription, helpUri)>]
 let emptyStringCliAnalyzer (ctx: CliContext) =
-    async {
-        return
-            ctx.TypedTree
-            |> Option.map invalidStringFunctionUseAnalyzer
-            |> Option.defaultValue []
-    }
+    async { return ctx.TypedTree |> Option.map analyze |> Option.defaultValue [] }
