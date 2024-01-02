@@ -28,7 +28,7 @@ ignore a
     """
 
         let ctx = getContext projectOptions source
-        let! msgs = ignoreFunctionAnalyzer ctx
+        let! msgs = ignoreFunctionCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
 
         Assert.That(
@@ -51,7 +51,7 @@ channel.Writer.Complete |> ignore
     """
 
         let ctx = getContext projectOptions source
-        let! msgs = ignoreFunctionAnalyzer ctx
+        let! msgs = ignoreFunctionCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
 
         Assert.That(
@@ -71,7 +71,7 @@ ignore<int -> int -> int> (+)
     """
 
         let ctx = getContext projectOptions source
-        let! msgs = ignoreFunctionAnalyzer ctx
+        let! msgs = ignoreFunctionCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
 
         Assert.That(

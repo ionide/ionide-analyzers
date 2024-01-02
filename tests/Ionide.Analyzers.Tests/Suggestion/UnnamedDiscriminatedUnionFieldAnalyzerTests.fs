@@ -26,7 +26,7 @@ type DU =
     """
 
         let ctx = getContext projectOptions source
-        let! msgs = unnamedDiscriminatedUnionFieldAnalyzer ctx
+        let! msgs = unnamedDiscriminatedUnionFieldCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains "Field inside union case is not named!" msgs[0], Is.True)
     }
@@ -43,7 +43,7 @@ type DU =
     """
 
         let ctx = getContext projectOptions source
-        let! msgs = unnamedDiscriminatedUnionFieldAnalyzer ctx
+        let! msgs = unnamedDiscriminatedUnionFieldCliAnalyzer ctx
         Assert.That(msgs, Is.Empty)
     }
 
@@ -58,7 +58,7 @@ exception Exception3 of int * noOkCase: string // kind of not ok
     """
 
         let ctx = getContext projectOptions source
-        let! msgs = unnamedDiscriminatedUnionFieldAnalyzer ctx
+        let! msgs = unnamedDiscriminatedUnionFieldCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains "Field inside union case is not named!" msgs[0], Is.True)
     }
@@ -75,6 +75,6 @@ type TriviaContent =
     """
 
         let ctx = getContext projectOptions source
-        let! msgs = unnamedDiscriminatedUnionFieldAnalyzer ctx
+        let! msgs = unnamedDiscriminatedUnionFieldCliAnalyzer ctx
         Assert.That(msgs, Is.Empty)
     }

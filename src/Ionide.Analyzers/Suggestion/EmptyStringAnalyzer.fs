@@ -12,7 +12,7 @@ let (|EmptyStringConst|_|) (e: FSharpExpr) =
     | Some("System.String"), FSharpExprPatterns.Const(o, _type) when not (isNull o) && (string o).Length = 0 -> Some()
     | _ -> None
 
-let invalidStringFunctionUseAnalyzer (typedTree: FSharpImplementationFileContents) =
+let analyze (typedTree: FSharpImplementationFileContents) =
     let ranges = ResizeArray<range>()
 
     let walker =
@@ -45,20 +45,10 @@ let invalidStringFunctionUseAnalyzer (typedTree: FSharpImplementationFileContent
                  "Verifies testing for an empty string is done efficiently.",
                  "https://ionide.io/ionide-analyzers/suggestion/005.html")>]
 let emptyStringEditorAnalyzer (ctx: EditorContext) =
-    async {
-        return
-            ctx.TypedTree
-            |> Option.map invalidStringFunctionUseAnalyzer
-            |> Option.defaultValue []
-    }
+    async { return ctx.TypedTree |> Option.map analyze |> Option.defaultValue [] }
 
 [<CliAnalyzer("EmptyStringAnalyzer",
               "Verifies testing for an empty string is done efficiently.",
               "https://ionide.io/ionide-analyzers/suggestion/005.html")>]
 let emptyStringCliAnalyzer (ctx: CliContext) =
-    async {
-        return
-            ctx.TypedTree
-            |> Option.map invalidStringFunctionUseAnalyzer
-            |> Option.defaultValue []
-    }
+    async { return ctx.TypedTree |> Option.map analyze |> Option.defaultValue [] }
