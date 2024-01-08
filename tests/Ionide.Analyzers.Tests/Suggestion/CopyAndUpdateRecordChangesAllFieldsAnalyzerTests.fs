@@ -31,6 +31,7 @@ let updated = { a with A = 2 }
         let! msgs = copyAndUpdateRecordChangesAllFieldsCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains "All record fields of record are being updated" msgs[0], Is.True)
+        Assert.That(msgs[0].Fixes, Is.Not.Empty)
     }
 
 [<Test>]
@@ -49,6 +50,7 @@ let updated = { a with A = 2; B = 4; C = 5 }
         let! msgs = copyAndUpdateRecordChangesAllFieldsCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains "All record fields of record are being updated" msgs[0], Is.True)
+        Assert.That(msgs[0].Fixes, Is.Not.Empty)
     }
 
 [<Test>]
