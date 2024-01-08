@@ -7,7 +7,7 @@ open FSharp.Compiler.Symbols
 open FSharp.Compiler.Text
 open FSharp.Compiler.Syntax
 
-type UpdateRecord = SynExprRecordField list * range
+type UpdateRecord = SynExprRecordField list * range * range
 
 let analyze parseTree (typedTree: FSharpImplementationFileContents option) =
     let untypedRecordUpdates =
@@ -17,7 +17,9 @@ let analyze parseTree (typedTree: FSharpImplementationFileContents option) =
             { new SyntaxCollectorBase() with
                 override x.WalkExpr(_, e: SynExpr) =
                     match e with
-                    | SynExpr.Record(copyInfo = Some _; recordFields = fields) -> xs.Add(fields, e.Range)
+                    | SynExpr.Record(copyInfo = Some(synExpr, (withRange, _)); recordFields = fields) ->
+                        let fixRange = Range.unionRanges synExpr.Range (Range.shiftEnd 0 1 withRange)
+                        xs.Add(fields, e.Range, fixRange)
                     | _ -> ()
             }
 
@@ -31,11 +33,11 @@ let analyze parseTree (typedTree: FSharpImplementationFileContents option) =
             override x.WalkNewRecord (recordType: FSharpType) _ (mRecord: range) =
                 let matchingUnTypedNode =
                     untypedRecordUpdates
-                    |> List.tryFind (fun (_, mExpr) -> Range.equals mExpr mRecord)
+                    |> List.tryFind (fun (_, mExpr, _) -> Range.equals mExpr mRecord)
 
                 match matchingUnTypedNode with
                 | None -> ()
-                | Some(fields, mExpr) ->
+                | Some(fields, mExpr, fixRange) ->
 
                 if not recordType.TypeDefinition.IsFSharpRecord then
                     ()
@@ -48,7 +50,14 @@ let analyze parseTree (typedTree: FSharpImplementationFileContents option) =
                             Code = "IONIDE-001"
                             Severity = Severity.Hint
                             Range = mExpr
-                            Fixes = []
+                            Fixes =
+                                [
+                                    {
+                                        FromRange = fixRange
+                                        FromText = ""
+                                        ToText = ""
+                                    }
+                                ]
                         }
         }
 
