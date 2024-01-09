@@ -2,6 +2,8 @@
 
 open NUnit.Framework
 open FSharp.Compiler.CodeAnalysis
+open FSharp.Compiler.Text.Range
+open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.Testing
 open Ionide.Analyzers.Suggestion.CopyAndUpdateRecordChangesAllFieldsAnalyzer
 
@@ -30,7 +32,20 @@ let updated = { a with A = 2 }
         let ctx = getContext projectOptions source
         let! msgs = copyAndUpdateRecordChangesAllFieldsCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
-        Assert.That(Assert.messageContains "All record fields of record are being updated" msgs[0], Is.True)
+        let msg = msgs[0]
+        Assert.That(Assert.messageContains "All record fields of record are being updated" msg, Is.True)
+        Assert.That(msg.Fixes, Is.Not.Empty)
+        let fix = msg.Fixes[0]
+
+        let expectedFix =
+            {
+                FromText = ""
+                ToText = ""
+                FromRange =
+                    mkRange "A.fs" (FSharp.Compiler.Text.Position.mkPos 6 16) (FSharp.Compiler.Text.Position.mkPos 6 23)
+            }
+
+        Assert.That((fix = expectedFix), Is.True)
     }
 
 [<Test>]
@@ -48,7 +63,20 @@ let updated = { a with A = 2; B = 4; C = 5 }
         let ctx = getContext projectOptions source
         let! msgs = copyAndUpdateRecordChangesAllFieldsCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
-        Assert.That(Assert.messageContains "All record fields of record are being updated" msgs[0], Is.True)
+        let msg = msgs[0]
+        Assert.That(Assert.messageContains "All record fields of record are being updated" msg, Is.True)
+        Assert.That(msg.Fixes, Is.Not.Empty)
+        let fix = msg.Fixes[0]
+
+        let expectedFix =
+            {
+                FromText = ""
+                ToText = ""
+                FromRange =
+                    mkRange "A.fs" (FSharp.Compiler.Text.Position.mkPos 6 16) (FSharp.Compiler.Text.Position.mkPos 6 23)
+            }
+
+        Assert.That((fix = expectedFix), Is.True)
     }
 
 [<Test>]

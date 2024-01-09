@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+* Add fix-support to the CopyAndUpdateRecordChangesAllFieldsAnalyzer. [#68](https://github.com/ionide/ionide-analyzers/pull/68)
+
+### Changed
+* Update FSharp.Analyzers.SDK to `0.23.0`. [#68](https://github.com/ionide/ionide-analyzers/pull/68)
+
 ## 0.6.1 - 2024-01-01
 
 ### Added
