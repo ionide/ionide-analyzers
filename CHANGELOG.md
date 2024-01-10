@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## 0.7.0 - 2024-01-10
 
 ### Added
 * Add fix-support to the CopyAndUpdateRecordChangesAllFieldsAnalyzer. [#68](https://github.com/ionide/ionide-analyzers/pull/68)
