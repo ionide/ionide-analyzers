@@ -43,7 +43,7 @@ let postfixGenericsAnalyzer: Analyzer<CliContext> =
                         Type = "PostfixGenericsAnalyzer"
                         Message = message
                         Code = "IONIDE-002"
-                        Severity = Info
+                        Severity = Severity.Info
                         Range = range
                         Fixes = []
                     }

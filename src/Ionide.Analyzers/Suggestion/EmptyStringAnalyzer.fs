@@ -34,7 +34,7 @@ let analyze (typedTree: FSharpImplementationFileContents) =
             Message =
                 "Test for empty strings should use the String.Length property or the String.IsNullOrEmpty method."
             Code = "IONIDE-005"
-            Severity = Warning
+            Severity = Severity.Warning
             Range = r
             Fixes = []
         }
