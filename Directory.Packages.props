@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="FSharp.Core" Version="[8.0.200]" />
@@ -10,6 +11,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageVersion Include="NUnit" Version="4.1.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageVersion Include="MSBuild.StructuredLogger" Version="2.2.206" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'false'">
     <PackageVersion Include="FSharp.Analyzers.SDK" Version="[0.25.0]" />
