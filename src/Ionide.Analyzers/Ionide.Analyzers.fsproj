@@ -18,6 +18,7 @@
         <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzer.fs"/>
         <Compile Include="Suggestion\EmptyStringAnalyzer.fs"/>
         <Compile Include="Suggestion\HandleOptionGracefullyAnalyzer.fs"/>
+        <Compile Include="Suggestion\HeadConsEmptyListPatternAnalyzer.fs" />
         <Compile Include="Style\PostfixGenericsAnalyzer.fs"/>
     </ItemGroup>
 
