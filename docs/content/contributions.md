@@ -35,6 +35,14 @@ Or `dotnet fsi build.fsx -- --help` to view non-default pipelines.
 
 ### Your analyzer
 
+Scaffold your analyzer by running:
+
+```shell
+dotnet fsi .\build.fsx -- -p NewAnalyzer
+```
+
+This will ask prompt your to enter a name and a category and create will all the necessary files.
+
 We try to split the analyzers up into several categories:
 
 - `hints`
