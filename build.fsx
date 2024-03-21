@@ -454,7 +454,7 @@ let Setup () =
 let ``first test here`` () =
     async {{
         let source =
-            %s{tripleQuote}
+            %s{tripleQuote}module Lib
 // Some source here
     %s{tripleQuote}
 
@@ -463,7 +463,6 @@ let ``first test here`` () =
         Assert.That(msgs, Is.Not.Empty)
         let msg = msgs[0]
         Assert.That(Assert.messageContains message msg, Is.True)
-        Assert.That(msg.Fixes, Is.Not.Empty)
     }}
 """
 
