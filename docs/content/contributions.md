@@ -41,7 +41,7 @@ Scaffold your analyzer by running:
 dotnet fsi .\build.fsx -- -p NewAnalyzer
 ```
 
-This will ask prompt your to enter a name and a category and create will all the necessary files.
+This will prompt you to enter the analyzer's name and category and will create all the necessary files.
 
 We try to split the analyzers up into several categories:
 
