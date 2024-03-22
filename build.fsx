@@ -5,13 +5,13 @@
 #r "nuget: Humanizer.Core, 2.14.1"
 
 open System
-open System.Text.Json
+open System.IO
+open System.Xml.Linq
 open System.Threading
 open Fake.IO
 open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fun.Build
-open Fun.Build.Internal
 open NuGet.Common
 open NuGet.Protocol
 open NuGet.Protocol.Core.Types
@@ -91,7 +91,7 @@ let getLatestPublishedNugetVersion packageName =
     }
 
 let getLatestChangeLogVersion () : SemanticVersion * DateTime * ChangelogData option =
-    let changelog = System.IO.FileInfo(__SOURCE_DIRECTORY__ </> "CHANGELOG.md")
+    let changelog = FileInfo(__SOURCE_DIRECTORY__ </> "CHANGELOG.md")
     let changeLogResult =
         match Parser.parseChangeLog changelog with
         | Error error -> failwithf "%A" error
@@ -233,16 +233,16 @@ let mkGitHubRelease
         let ghReleaseInfo = mapToGithubRelease currentVersion
         let! notes = getReleaseNotes ctx ghReleaseInfo previousReleaseDate
         ctx.LogWhenDryRun $"NOTES:\n%s{notes}"
-        let noteFile = System.IO.Path.GetTempFileName()
-        System.IO.File.WriteAllText(noteFile, notes)
+        let noteFile = Path.GetTempFileName()
+        File.WriteAllText(noteFile, notes)
         let file = $"./bin/Ionide.Analyzers.%s{ghReleaseInfo.Version}.nupkg"
 
         let! releaseResult =
             ctx.RunCommand
                 $"gh release create v%s{ghReleaseInfo.Version} {file} --title \"{ghReleaseInfo.Title}\" --notes-file \"{noteFile}\""
 
-        if System.IO.File.Exists noteFile then
-            System.IO.File.Delete(noteFile)
+        if File.Exists noteFile then
+            File.Delete(noteFile)
 
         match releaseResult with
         | Error _ -> return 1
@@ -312,6 +312,201 @@ pipeline "Release" {
             }
         )
     }
+    runIfOnlySpecified true
+}
+
+let getLastCompileItem (fsproj: string) =
+    let xml = File.ReadAllText fsproj
+    let doc = XDocument.Parse xml
+    doc.Descendants(XName.Get "Compile")
+    |> Seq.filter (fun xe -> xe.Attribute(XName.Get "Include").Value <> "Program.fs")
+    |> Seq.last
+
+pipeline "NewAnalyzer" {
+    stage "Scaffold" {
+        run (fun _ctx ->
+            Console.Write "Enter analyzer name: "
+            let analyzerName = Console.ReadLine().Trim()
+
+            let analyzerName =
+                if analyzerName.EndsWith("Analyzer", StringComparison.Ordinal) then
+                    analyzerName
+                else
+                    $"%s{analyzerName}Analyzer"
+
+            let name = analyzerName.Replace("Analyzer", "").Camelize()
+
+            Console.Write("Enter the analyzer Category (existing are \"Suggestion\" or \"Style\"): ")
+            let category = Console.ReadLine().Trim().Pascalize()
+            let categoryLowered = category.ToLower()
+
+            let number =
+                Directory.EnumerateFiles(__SOURCE_DIRECTORY__ </> "docs", "*.md", SearchOption.AllDirectories)
+                |> Seq.choose (fun fileName ->
+                    let name = Path.GetFileNameWithoutExtension(fileName)
+                    match Int32.TryParse(name) with
+                    | true, result -> Some result
+                    | _ -> None
+                )
+                |> Seq.max
+                |> (+) 1
+
+            let camelCasedAnalyzerName = analyzerName.Camelize()
+
+            let analyzerFile =
+                __SOURCE_DIRECTORY__
+                </> $"src/Ionide.Analyzers/%s{category}/%s{analyzerName}.fs"
+                |> FileInfo
+
+            if not analyzerFile.Directory.Exists then
+                analyzerFile.Directory.Create()
+
+            let analyzerContent =
+                $"""module Ionide.Analyzers.%s{category}.%s{analyzerName}
+
+open FSharp.Compiler.Symbols
+open FSharp.Compiler.Text
+open FSharp.Compiler.Syntax
+open FSharp.Analyzers.SDK
+open FSharp.Analyzers.SDK.ASTCollecting
+open FSharp.Analyzers.SDK.TASTCollecting
+
+[<Literal>]
+let message = "Great message here"
+
+let private analyze () : Message list =
+    [
+        {{
+            Type = "%s{name}"
+            Message = message
+            Code = "IONIDE-%03i{number}"
+            Severity = Severity.Hint
+            Range = Range.Zero
+            Fixes = []
+        }}
+    ]
+
+[<Literal>]
+let name = "%s{analyzerName}"
+
+[<Literal>]
+let shortDescription =
+    "Short description about %s{analyzerName}"
+
+[<Literal>]
+let helpUri = "https://ionide.io/ionide-analyzers/%s{categoryLowered}/%03i{number}.html"
+
+[<CliAnalyzer(name, shortDescription, helpUri)>]
+let %s{name}CliAnalyzer: Analyzer<CliContext> =
+    fun (context: CliContext) -> async {{ return analyze () }}
+
+[<EditorAnalyzer(name, shortDescription, helpUri)>]
+let %s{name}EditorAnalyzer: Analyzer<EditorContext> =
+    fun (context: EditorContext) -> async {{ return analyze () }}
+"""
+
+            File.WriteAllText(analyzerFile.FullName, analyzerContent)
+            printfn $"Created %s{analyzerFile.FullName}"
+
+            let addCompileItem relativeFsProj filenameWithoutExtension =
+                let fsproj = __SOURCE_DIRECTORY__ </> relativeFsProj
+                let sibling = getLastCompileItem fsproj
+
+                if
+                    sibling.Attribute(XName.Get "Include").Value
+                    <> $"%s{filenameWithoutExtension}.fs"
+                then
+                    sibling.AddAfterSelf(XElement.Parse $"<Compile Include=\"%s{filenameWithoutExtension}.fs\" />")
+                    sibling.Document.Save fsproj
+
+            addCompileItem "src/Ionide.Analyzers/Ionide.Analyzers.fsproj" (sprintf "%s\\%s" category analyzerName)
+
+            let analyzerTestsFile =
+                __SOURCE_DIRECTORY__
+                </> $"tests/Ionide.Analyzers.Tests/%s{category}/%s{analyzerName}Tests.fs"
+                |> FileInfo
+
+            if not analyzerTestsFile.Directory.Exists then
+                analyzerTestsFile.Directory.Create()
+
+            let tripleQuote = "\"\"\""
+
+            let analyzerTestsContent =
+                $"""module Ionide.Analyzers.Tests.%s{category}.%s{analyzerName}Tests
+
+open NUnit.Framework
+open FSharp.Compiler.CodeAnalysis
+open FSharp.Compiler.Text.Range
+open FSharp.Analyzers.SDK
+open FSharp.Analyzers.SDK.Testing
+open Ionide.Analyzers.%s{category}.%s{analyzerName}
+
+let mutable projectOptions: FSharpProjectOptions = FSharpProjectOptions.zero
+
+[<SetUp>]
+let Setup () =
+    task {{
+        let! opts = mkOptionsFromProject "net7.0" []
+        projectOptions <- opts
+    }}
+
+[<Test>]
+let ``first test here`` () =
+    async {{
+        let source =
+            %s{tripleQuote}module Lib
+// Some source here
+    %s{tripleQuote}
+
+        let ctx = getContext projectOptions source
+        let! msgs = %s{name}CliAnalyzer ctx
+        Assert.That(msgs, Is.Not.Empty)
+        let msg = msgs[0]
+        Assert.That(Assert.messageContains message msg, Is.True)
+    }}
+"""
+
+            File.WriteAllText(analyzerTestsFile.FullName, analyzerTestsContent)
+
+            addCompileItem
+                "tests/Ionide.Analyzers.Tests/Ionide.Analyzers.Tests.fsproj"
+                $"%s{category}\\%s{analyzerName}Tests"
+            printfn "Created %s" analyzerTestsFile.FullName
+
+            let documentationFile =
+                __SOURCE_DIRECTORY__ </> $"docs/%s{categoryLowered}/%03i{number}.md" |> FileInfo
+
+            if not documentationFile.Directory.Exists then
+                documentationFile.Directory.Create()
+
+            let documentationContent =
+                $"""---
+title: %s{analyzerName}
+category: %s{categoryLowered}
+categoryindex: 1
+index: 1
+---
+
+# %s{analyzerName}
+
+## Problem
+
+```fsharp
+
+```
+
+## Fix
+
+```fsharp
+
+```
+"""
+
+            File.WriteAllText(documentationFile.FullName, documentationContent)
+            printfn "Created %s, your frontmatter probably isn't correct though." documentationFile.FullName
+        )
+    }
+
     runIfOnlySpecified true
 }
 
