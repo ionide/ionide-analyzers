@@ -16,6 +16,7 @@
     <Compile Include="Style\PostfixGenericsAnalyzerTests.fs" />
     <Compile Include="Performance\ListEqualsEmptyListAnalyzerTests.fs" />
     <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzerTests.fs" />
+    <Compile Include="Performance\CombinePipedModuleFunctionsAnalyzerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

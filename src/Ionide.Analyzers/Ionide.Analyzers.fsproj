@@ -23,6 +23,7 @@
     <Compile Include="Performance\ListEqualsEmptyListAnalyzer.fs" />
     <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzer.fsi" />
     <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzer.fs" />
+    <Compile Include="Performance\CombinePipedModuleFunctionsAnalyzer.fs" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
     <ProjectReference Include="$(LocalAnalyzersSDKRepo)/src/FSharp.Analyzers.SDK/FSharp.Analyzers.SDK.fsproj" />
