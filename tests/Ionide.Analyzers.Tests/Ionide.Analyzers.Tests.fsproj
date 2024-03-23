@@ -17,6 +17,7 @@
     <Compile Include="Performance\ListEqualsEmptyListAnalyzerTests.fs" />
     <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzerTests.fs" />
     <Compile Include="Performance\CombinePipedModuleFunctionsAnalyzerTests.fs" />
+    <Compile Include="Performance\EqualsNullAnalyzerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

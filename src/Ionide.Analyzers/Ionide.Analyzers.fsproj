@@ -13,6 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="LanguageVersionShim.fs" />
+    <Compile Include="UntypedOperations.fs" />
     <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzer.fs" />
     <Compile Include="Suggestion\IgnoreFunctionAnalyzer.fs" />
     <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzer.fs" />
@@ -24,6 +25,7 @@
     <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzer.fsi" />
     <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzer.fs" />
     <Compile Include="Performance\CombinePipedModuleFunctionsAnalyzer.fs" />
+    <Compile Include="Performance\EqualsNullAnalyzer.fs" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
     <ProjectReference Include="$(LocalAnalyzersSDKRepo)/src/FSharp.Analyzers.SDK/FSharp.Analyzers.SDK.fsproj" />

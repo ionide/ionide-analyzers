@@ -6,16 +6,12 @@ open FSharp.Compiler.Syntax
 open FSharp.Compiler.SyntaxTrivia
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
+open Ionide.Analyzers.UntypedOperations
 
 [<return: Struct>]
 let (|PipeInfixApp|_|) synExpr =
     match synExpr with
-    | SynExpr.App(
-        funcExpr = SynExpr.App(
-            isInfix = true
-            funcExpr = SynExpr.LongIdent(longDotId = SynLongIdent(trivia = [ Some(IdentTrivia.OriginalNotation "|>") ]))
-            argExpr = e1)
-        argExpr = e2) -> ValueSome(e1, e2)
+    | SynExpr.App(funcExpr = OpPipeRight e1; argExpr = e2) -> ValueSome(e1, e2)
     | _ -> ValueNone
 
 [<return: Struct>]

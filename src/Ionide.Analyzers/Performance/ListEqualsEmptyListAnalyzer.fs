@@ -6,6 +6,7 @@ open FSharp.Compiler.Syntax
 open FSharp.Compiler.SyntaxTrivia
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
+open Ionide.Analyzers.UntypedOperations
 
 [<Literal>]
 let message = "list = [] is suboptimal, use List.isEmpty"
@@ -17,16 +18,6 @@ type private EqualsOperation = | EqualsOperation of argExpr: range * range: rang
 let private (|EmptyList|_|) =
     function
     | SynExpr.ArrayOrList(false, [], _) -> ValueSome()
-    | _ -> ValueNone
-
-[<return: Struct>]
-let private (|OpEquality|_|) =
-    function
-    | SynExpr.App(ExprAtomicFlag.NonAtomic,
-                  true,
-                  SynExpr.LongIdent(longDotId = SynLongIdent(trivia = [ Some(IdentTrivia.OriginalNotation "=") ])),
-                  argExpr,
-                  _) -> ValueSome argExpr
     | _ -> ValueNone
 
 let private analyze (sourceText: ISourceText) (parsedInput: ParsedInput) : Message list =
