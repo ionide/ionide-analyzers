@@ -10,6 +10,7 @@ open FSharp.Compiler.SyntaxTrivia
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
 open Ionide.Analyzers
+open Ionide.Analyzers.TypedOperations
 
 [<Literal>]
 let message = "Consider adding [<return: Struct>] to partial active pattern."
@@ -24,20 +25,6 @@ let (|PartialActivePatternName|_|) (pat: SynPat) =
         else
             ValueSome ident
     | _ -> ValueNone
-
-let tryFSharpMemberOrFunctionOrValueFromIdent
-    (sourceText: ISourceText)
-    (checkResults: FSharpCheckFileResults)
-    (ident: Ident)
-    =
-    let line = sourceText.GetLineString(ident.idRange.EndLine - 1)
-
-    checkResults.GetSymbolUseAtLocation(ident.idRange.EndLine, ident.idRange.EndColumn, line, [ ident.idText ])
-    |> Option.bind (fun symbolUse ->
-        match symbolUse.Symbol with
-        | :? FSharpMemberOrFunctionOrValue as mfv when mfv.IsActivePattern -> Some mfv
-        | _ -> None
-    )
 
 let hasReturnStructAttribute (attributeList: SynAttributeList) =
     attributeList.Attributes
@@ -158,17 +145,22 @@ let analyze (sourceText: ISourceText) (parsedInput: ParsedInput) (checkResults: 
 
         tryFSharpMemberOrFunctionOrValueFromIdent sourceText checkResults ident
         |> Option.bind (fun mfv ->
-            if mfv.ReturnParameter.Type.BasicQualifiedName = "Microsoft.FSharp.Core.voption`1" then
+            if
+                not mfv.IsActivePattern
+                || mfv.ReturnParameter.Type.BasicQualifiedName = "Microsoft.FSharp.Core.voption`1"
+            then
                 None
             else
 
             let fixes =
+                let indentFunction = String.replicate data.LeadingKeyword.Range.StartColumn " "
+
                 [
                     // Add the [<return: Struct>] attribute
                     {
                         FromText = ""
                         FromRange = data.LeadingKeyword.Range.StartRange
-                        ToText = "[<return: Struct>]\n"
+                        ToText = $"[<return: Struct>]\n%s{indentFunction}"
                     }
                     // Replace : x option to : x voption
                     match data.ReturnTypeOption with

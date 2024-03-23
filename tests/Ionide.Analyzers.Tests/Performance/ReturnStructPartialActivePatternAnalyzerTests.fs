@@ -181,3 +181,28 @@ let rec (|OpenL|_|) =
         let msg = msgs[0]
         Assert.That(msg.Fixes.Length, Is.EqualTo 4)
     }
+
+[<Test>]
+let ``fix data for indented binding`` () =
+    async {
+        let source =
+            """namespace Lib
+
+module Foo =
+
+    open FSharp.Compiler.Syntax
+
+    let rec (|OpenL|_|) =
+        function
+        | SynModuleDecl.Open(target, range) :: OpenL(xs, ys) -> Some((target, range) :: xs, ys)
+        | SynModuleDecl.Open(target, range) :: ys -> Some([ target, range ], ys)
+        | _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Not.Empty)
+        let msg = msgs[0]
+        let attributeFix = msg.Fixes.[0]
+        Assert.That("[<return: Struct>]\n    ", Is.EqualTo attributeFix.ToText)
+    }

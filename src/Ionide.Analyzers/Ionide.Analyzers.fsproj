@@ -14,6 +14,7 @@
   <ItemGroup>
     <Compile Include="LanguageVersionShim.fs" />
     <Compile Include="UntypedOperations.fs" />
+    <Compile Include="TypedOperations.fs" />
     <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzer.fs" />
     <Compile Include="Suggestion\IgnoreFunctionAnalyzer.fs" />
     <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzer.fs" />

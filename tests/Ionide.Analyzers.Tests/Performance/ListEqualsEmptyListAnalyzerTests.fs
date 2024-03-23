@@ -45,3 +45,19 @@ let b = [] = a
         let msg = msgs[0]
         Assert.That(Assert.messageContains message msg, Is.True)
     }
+
+[<Test>]
+let ``named ctor parameter does not trigger`` () =
+    async {
+        let source =
+            """module Lib
+
+type X(y:int list) = class end
+
+let x = X(y = [])
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = listEqualsEmptyListCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }

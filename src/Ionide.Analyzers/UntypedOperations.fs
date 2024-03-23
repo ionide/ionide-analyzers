@@ -10,9 +10,10 @@ let (|InfixOperator|_|) (originalText: string) =
     | SynExpr.App(ExprAtomicFlag.NonAtomic,
                   true,
                   SynExpr.LongIdent(
-                      longDotId = SynLongIdent(trivia = [ Some(IdentTrivia.OriginalNotation originalNotation) ])),
+                      longDotId = SynLongIdent(
+                          id = [ operatorIdent ]; trivia = [ Some(IdentTrivia.OriginalNotation originalNotation) ])),
                   argExpr,
-                  _) when originalNotation = originalText -> ValueSome argExpr
+                  _) when originalNotation = originalText -> ValueSome(operatorIdent, argExpr)
     | _ -> ValueNone
 
 [<return: Struct>]

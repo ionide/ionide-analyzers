@@ -161,3 +161,19 @@ let ``inequals fix without parens`` () =
         let fix = msg.Fixes.[0]
         Assert.That("not (isNull \"meh\")", Is.EqualTo fix.ToText)
     }
+
+[<Test>]
+let ``named ctor parameter does not trigger`` () =
+    async {
+        let source =
+            """module Lib
+
+type X(y:obj) = class end
+
+let x = X(y = null)
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
