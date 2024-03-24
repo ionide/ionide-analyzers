@@ -27,6 +27,7 @@
     <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzer.fs" />
     <Compile Include="Performance\CombinePipedModuleFunctionsAnalyzer.fs" />
     <Compile Include="Performance\EqualsNullAnalyzer.fs" />
+    <Compile Include="Suggestion\StructDiscriminatedUnionAnalyzer.fs" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
     <ProjectReference Include="$(LocalAnalyzersSDKRepo)/src/FSharp.Analyzers.SDK/FSharp.Analyzers.SDK.fsproj" />
