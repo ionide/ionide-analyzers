@@ -147,6 +147,7 @@ let analyze (sourceText: ISourceText) (parsedInput: ParsedInput) (checkResults: 
         |> Option.bind (fun mfv ->
             if
                 not mfv.IsActivePattern
+                || mfv.ReturnParameter.Type.IsFunctionType
                 || mfv.ReturnParameter.Type.BasicQualifiedName = "Microsoft.FSharp.Core.voption`1"
             then
                 None

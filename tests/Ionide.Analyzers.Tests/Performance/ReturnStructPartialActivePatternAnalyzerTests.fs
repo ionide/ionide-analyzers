@@ -57,6 +57,22 @@ let (|IsOneOrTwo|_|) = function | 1 -> Some() | 2 -> Some() | _ -> None
     }
 
 [<Test>]
+let ``partial active pattern that return function`` () =
+    async {
+        let source =
+            """module Lib
+
+let inline (|Delimited|_|) (str: 'a list) : 'a list -> ('a list * 'a list * int * int) option = fun _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Not.Empty)
+        let msg = msgs[0]
+        Assert.That(Assert.messageContains message msg, Is.True)
+    }
+
+[<Test>]
 let ``negative: optimized partial active pattern`` () =
     async {
         let source =

@@ -89,9 +89,27 @@ let ``negative: du with tuple fields`` () =
         let source =
             """module Lib
 
-[<Struct>]
 type Foo =
     | Bar of int * int
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = structDiscriminatedUnionCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
+let ``negative: du with anonymous type`` () =
+    async {
+        let source =
+            """module Lib
+
+type ParsedCell =
+    | Code of
+        {| lang: string
+           source: string
+           outputs: string[] option |}
+    | Markdown of source: string
     """
 
         let ctx = getContext projectOptions source

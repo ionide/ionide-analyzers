@@ -106,7 +106,7 @@ let private analyze
                     | None -> false
                     | Some ff ->
 
-                    if ff.FieldType.IsFunctionType then
+                    if ff.FieldType.IsFunctionType || ff.FieldType.IsAnonRecordType then
                         false
                     else
 
