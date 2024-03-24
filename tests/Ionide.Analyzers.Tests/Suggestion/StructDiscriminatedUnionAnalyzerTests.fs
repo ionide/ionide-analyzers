@@ -63,8 +63,17 @@ type Foo =
     | Bear of System.DateTime
     | B4 of string
     | B5 of System.TimeSpan
-    | B6 of int16 * int64 * uint * uint16 * byte * sbyte * float32 * decimal * char * bool
-    | B7 of System.Guid
+    | B6 of System.Guid
+    | B7 of int16 
+    | B8 of int64
+    | B9 of uint
+    | B10 of uint16
+    | B11 of byte
+    | B12 of sbyte
+    | B13 of float32
+    | B14 of decimal
+    | B15 of char
+    | B16 of bool
     """
 
         let ctx = getContext projectOptions source
@@ -72,6 +81,22 @@ type Foo =
         Assert.That(msgs, Is.Not.Empty)
         let msg = msgs[0]
         Assert.That(Assert.messageContains message msg, Is.True)
+    }
+
+[<Test>]
+let ``negative: du with tuple fields`` () =
+    async {
+        let source =
+            """module Lib
+
+[<Struct>]
+type Foo =
+    | Bar of int * int
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = structDiscriminatedUnionCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]

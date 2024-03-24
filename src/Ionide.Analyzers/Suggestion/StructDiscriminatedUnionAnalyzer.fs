@@ -98,15 +98,19 @@ let private analyze
             let allTypesArePrimitive =
                 entity.UnionCases
                 |> Seq.forall (fun uc ->
-                    uc.Fields
-                    |> Seq.forall (fun ff ->
-                        if ff.FieldType.IsFunctionType then
-                            false
-                        else
+                    if Seq.isEmpty uc.Fields then
+                        true
+                    else
 
-                        primitives.Contains ff.FieldType.BasicQualifiedName
+                    match Seq.tryExactlyOne uc.Fields with
+                    | None -> false
+                    | Some ff ->
 
-                    )
+                    if ff.FieldType.IsFunctionType then
+                        false
+                    else
+
+                    primitives.Contains ff.FieldType.BasicQualifiedName
                 )
 
             if not allTypesArePrimitive then
