@@ -5,12 +5,14 @@ open FSharp.Analyzers.SDK.TASTCollecting
 open FSharp.Compiler.Symbols
 open FSharp.Compiler.Text
 
+[<return: Struct>]
 let (|EmptyStringConst|_|) (e: FSharpExpr) =
     let name = e.Type.ErasedType.TypeDefinition.TryGetFullName()
 
     match name, e with
-    | Some("System.String"), FSharpExprPatterns.Const(o, _type) when not (isNull o) && (string o).Length = 0 -> Some()
-    | _ -> None
+    | Some("System.String"), FSharpExprPatterns.Const(o, _type) when not (isNull o) && (string o).Length = 0 ->
+        ValueSome()
+    | _ -> ValueNone
 
 let analyze (typedTree: FSharpImplementationFileContents) =
     let ranges = ResizeArray<range>()

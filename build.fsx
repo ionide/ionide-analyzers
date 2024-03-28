@@ -364,9 +364,11 @@ pipeline "NewAnalyzer" {
             let analyzerContent =
                 $"""module Ionide.Analyzers.%s{category}.%s{analyzerName}
 
+open System.Collections.Generic
 open FSharp.Compiler.Symbols
 open FSharp.Compiler.Text
 open FSharp.Compiler.Syntax
+open FSharp.Compiler.SyntaxTrivia
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
 open FSharp.Analyzers.SDK.TASTCollecting
