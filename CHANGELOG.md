@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.10.0 - 2024-03-29
+
+### Added
+* HeadConsEmptyListPatternAnalyzer. [#85](https://github.com/ionide/ionide-analyzers/pull/85)
+* ListEqualsEmptyListAnalyzer. [#85](https://github.com/ionide/ionide-analyzers/pull/85)
+* ReturnStructPartialActivePatternAnalyzer [#85](https://github.com/ionide/ionide-analyzers/pull/85)
+* CombinePipedModuleFunctionsAnalyzer [#85](https://github.com/ionide/ionide-analyzers/pull/85)
+* EqualsNullAnalyzer [#85](https://github.com/ionide/ionide-analyzers/pull/85)
+* StructDiscriminatedUnionAnalyzer. [#85](https://github.com/ionide/ionide-analyzers/pull/85)
+
 ## 0.9.0 - 2024-02-15
 
 ### Changed

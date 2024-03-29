@@ -1,39 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzerTests.fs" />
     <Compile Include="Suggestion\IgnoreFunctionAnalyzerTests.fs" />
     <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzerTests.fs" />
     <Compile Include="Suggestion\EmptyStringAnalyzerTests.fs" />
     <Compile Include="Suggestion\HandleOptionGracefullyAnalyzerTests.fs" />
+    <Compile Include="Suggestion\HeadConsEmptyListPatternAnalyzerTests.fs" />
     <Compile Include="Style\PostfixGenericsAnalyzerTests.fs" />
+    <Compile Include="Performance\ListEqualsEmptyListAnalyzerTests.fs" />
+    <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzerTests.fs" />
+    <Compile Include="Performance\CombinePipedModuleFunctionsAnalyzerTests.fs" />
+    <Compile Include="Performance\EqualsNullAnalyzerTests.fs" />
+    <Compile Include="Suggestion\StructDiscriminatedUnionAnalyzerTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
   </ItemGroup>
-  
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'false'">
     <PackageReference Include="FSharp.Analyzers.SDK.Testing" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Ionide.Analyzers\Ionide.Analyzers.fsproj" />
   </ItemGroup>
-  
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
     <ProjectReference Include="$(LocalAnalyzersSDKRepo)/src/FSharp.Analyzers.SDK.Testing/FSharp.Analyzers.SDK.Testing.fsproj" />
   </ItemGroup>
-
 </Project>

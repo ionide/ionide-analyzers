@@ -1,42 +1,46 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <IsPackable>true</IsPackable>
-        <Tailcalls>true</Tailcalls>
-        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-        <DevelopmentDependency>true</DevelopmentDependency>
-        <NoPackageAnalysis>true</NoPackageAnalysis>
-        <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-    </PropertyGroup>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsPackable>true</IsPackable>
+    <Tailcalls>true</Tailcalls>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="LanguageVersionShim.fs" />
+    <Compile Include="UntypedOperations.fs" />
+    <Compile Include="TypedOperations.fs" />
+    <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzer.fs" />
+    <Compile Include="Suggestion\IgnoreFunctionAnalyzer.fs" />
+    <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzer.fs" />
+    <Compile Include="Suggestion\EmptyStringAnalyzer.fs" />
+    <Compile Include="Suggestion\HandleOptionGracefullyAnalyzer.fs" />
+    <Compile Include="Suggestion\HeadConsEmptyListPatternAnalyzer.fs" />
+    <Compile Include="Style\PostfixGenericsAnalyzer.fs" />
+    <Compile Include="Performance\ListEqualsEmptyListAnalyzer.fs" />
+    <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzer.fsi" />
+    <Compile Include="Performance\ReturnStructPartialActivePatternAnalyzer.fs" />
+    <Compile Include="Performance\CombinePipedModuleFunctionsAnalyzer.fs" />
+    <Compile Include="Performance\EqualsNullAnalyzer.fs" />
+    <Compile Include="Suggestion\StructDiscriminatedUnionAnalyzer.fs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
+    <ProjectReference Include="$(LocalAnalyzersSDKRepo)/src/FSharp.Analyzers.SDK/FSharp.Analyzers.SDK.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'false'">
+    <PackageReference Include="FSharp.Analyzers.SDK" />
+  </ItemGroup>
+  <Target Name="_AddAnalyzersToOutput">
     <ItemGroup>
-        <Compile Include="Suggestion\CopyAndUpdateRecordChangesAllFieldsAnalyzer.fs"/>
-        <Compile Include="Suggestion\IgnoreFunctionAnalyzer.fs"/>
-        <Compile Include="Suggestion\UnnamedDiscriminatedUnionFieldAnalyzer.fs"/>
-        <Compile Include="Suggestion\EmptyStringAnalyzer.fs"/>
-        <Compile Include="Suggestion\HandleOptionGracefullyAnalyzer.fs"/>
-        <Compile Include="Style\PostfixGenericsAnalyzer.fs"/>
+      <TfmSpecificPackageFile Include="$(OutputPath)\$(AssemblyName).dll" PackagePath="analyzers/dotnet/fs" />
     </ItemGroup>
-
-    <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'true'">
-        <ProjectReference Include="$(LocalAnalyzersSDKRepo)/src/FSharp.Analyzers.SDK/FSharp.Analyzers.SDK.fsproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Update="FSharp.Core"/>
-    </ItemGroup>
-    
-    <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'false'">
-        <PackageReference Include="FSharp.Analyzers.SDK"/>
-    </ItemGroup>
-
-    <Target Name="_AddAnalyzersToOutput">
-        <ItemGroup>
-            <TfmSpecificPackageFile Include="$(OutputPath)\$(AssemblyName).dll" PackagePath="analyzers/dotnet/fs"/>
-        </ItemGroup>
-    </Target>
-
+  </Target>
 </Project>
