@@ -26,7 +26,9 @@ let private hasStructAttribute (attrs: SynAttributes) =
         attrList.Attributes
         |> List.exists (fun a ->
             match List.tryLast a.TypeName.LongIdent with
-            | Some structIdent -> structIdent.idText.StartsWith("Struct", StringComparison.Ordinal)
+            | Some structIdent ->
+                structIdent.idText.Equals("Struct", StringComparison.Ordinal)
+                || structIdent.idText.Equals("StructAttribute", StringComparison.Ordinal)
             | _ -> false
         )
     )
