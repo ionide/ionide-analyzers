@@ -52,6 +52,45 @@ type Foo =
     }
 
 [<Test>]
+let ``negative: du is already struct (full StructAttribute name)`` () =
+    async {
+        let source =
+            """module Lib
+
+[<StructAttribute>]
+type Foo =
+    | Bar
+    | Barry
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = structDiscriminatedUnionCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+// A special test case for https://github.com/ionide/ionide-analyzers/issues/102
+[<Test>]
+let ``du with a StructuredFormatDisplay attribute`` () =
+    async {
+        let source =
+            """module Lib
+
+[<StructuredFormatDisplay("{DisplayText}")>]
+type Foo =
+    | Bar
+    | Barry
+
+    member this.DisplayText = ""
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = structDiscriminatedUnionCliAnalyzer ctx
+        Assert.That(msgs, Is.Not.Empty)
+        let msg = msgs[0]
+        Assert.That(Assert.messageContains message msg, Is.True)
+    }
+
+[<Test>]
 let ``du with only primitive field values`` () =
     async {
         let source =
