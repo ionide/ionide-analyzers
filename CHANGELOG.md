@@ -2,7 +2,7 @@
 
 ## 0.11.1 - 2024-08-06
 
-* Update FSharp.Analyzers.SDK to `0.26.1`
+* Update FSharp.Analyzers.SDK to `0.26.1`. [#110](https://github.com/ionide/ionide-analyzers/pull/110)
 
 ## 0.11.0 - 2024-05-15
 
