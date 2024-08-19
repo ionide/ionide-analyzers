@@ -4,8 +4,8 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="FSharp.Core" Version="[8.0.300]" />
-    <PackageVersion Include="FSharp.Compiler.Service" Version="[43.8.300]" />
+    <PackageVersion Include="FSharp.Core" Version="[8.0.400]" />
+    <PackageVersion Include="FSharp.Compiler.Service" Version="[43.8.400]" />
     <PackageVersion Include="Ionide.KeepAChangelog.Tasks" Version="0.1.8" />
     <PackageVersion Include="DotNet.ReproducibleBuilds" Version="1.2.4" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
@@ -14,7 +14,7 @@
     <PackageVersion Include="MSBuild.StructuredLogger" Version="2.2.291" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'false'">
-    <PackageVersion Include="FSharp.Analyzers.SDK" Version="[0.26.1]" />
-    <PackageVersion Include="FSharp.Analyzers.SDK.Testing" Version="[0.26.1]" />
+    <PackageVersion Include="FSharp.Analyzers.SDK" Version="[0.27.0]" />
+    <PackageVersion Include="FSharp.Analyzers.SDK.Testing" Version="[0.27.0]" />
   </ItemGroup>
 </Project>
