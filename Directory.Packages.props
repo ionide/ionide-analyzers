@@ -9,7 +9,7 @@
     <PackageVersion Include="Ionide.KeepAChangelog.Tasks" Version="0.1.8" />
     <PackageVersion Include="DotNet.ReproducibleBuilds" Version="1.2.4" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageVersion Include="NUnit" Version="4.1.0" />
+    <PackageVersion Include="NUnit" Version="4.2.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="MSBuild.StructuredLogger" Version="2.2.291" />
   </ItemGroup>
