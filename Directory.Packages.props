@@ -8,7 +8,7 @@
     <PackageVersion Include="FSharp.Compiler.Service" Version="[43.8.400]" />
     <PackageVersion Include="Ionide.KeepAChangelog.Tasks" Version="0.1.8" />
     <PackageVersion Include="DotNet.ReproducibleBuilds" Version="1.2.4" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageVersion Include="NUnit" Version="4.2.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="MSBuild.StructuredLogger" Version="2.2.337" />
