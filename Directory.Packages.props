@@ -11,7 +11,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageVersion Include="NUnit" Version="4.2.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageVersion Include="MSBuild.StructuredLogger" Version="2.2.356" />
+    <PackageVersion Include="MSBuild.StructuredLogger" Version="2.2.374" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalAnalyzersSDK)' == 'false'">
     <PackageVersion Include="FSharp.Analyzers.SDK" Version="[0.27.0]" />
