@@ -39,7 +39,7 @@ jobs:
 
       - name: Analyzers
         continue-on-error: true
-        run: dotnet fsharp-analyzers --project ./src/Ionide.Analyzers/Ionide.Analyzers.fsproj --project ./tests/Ionide.Analyzers.Tests/Ionide.Analyzers.Tests.fsproj --analyzers-path ./src/Ionide.Analyzers/bin/Release/net6.0 --report ./report.sarif
+        run: dotnet fsharp-analyzers --project ./src/Ionide.Analyzers/Ionide.Analyzers.fsproj --project ./tests/Ionide.Analyzers.Tests/Ionide.Analyzers.Tests.fsproj --analyzers-path ./src/Ionide.Analyzers/bin/Release/net8.0 --report ./report.sarif
         if: matrix.os == 'ubuntu-latest'
 
       - name: Upload SARIF file
