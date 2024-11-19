@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.13.0 - 2024-11-19
+
+### Added
+
+* Bump FSharp.Analyzers.SDK to `0.28.0`. [#129](https://github.com/ionide/ionide-analyzers/pull/129)
+  * This also bumps the TFM of the library and CLI to net8.0
+
+### Removed
+
+* Support for .NET 6 and .NET 7
+
 ## 0.12.0 - 2024-08-18
 
 ### Changed
