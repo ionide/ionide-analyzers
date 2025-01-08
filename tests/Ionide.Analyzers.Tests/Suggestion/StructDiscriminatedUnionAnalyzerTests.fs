@@ -12,7 +12,7 @@ let mutable projectOptions: FSharpProjectOptions = FSharpProjectOptions.zero
 [<SetUp>]
 let Setup () =
     task {
-        let! opts = mkOptionsFromProject "net7.0" []
+        let! opts = mkOptionsFromProject "net8.0" []
         projectOptions <- opts
     }
 
@@ -229,6 +229,21 @@ let ``negative: du field with function type`` () =
 type Foo =
     | Bar of (int -> int)
     | Barry
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = structDiscriminatedUnionCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
+let ``negative: int array`` () =
+    async {
+        let source =
+            """module Foo
+
+type SingleCaseDU = | One of int[]
+type TwoCaseDU = | Empty | Full of int[]
     """
 
         let ctx = getContext projectOptions source
