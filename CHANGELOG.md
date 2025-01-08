@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.13.1 - 2024-01-08
+
+### Fixed
+
+* InvalidOperationException on some DUs. [#128](https://github.com/ionide/ionide-analyzers/issues/128)
+
 ## 0.13.0 - 2024-11-19
 
 ### Added
