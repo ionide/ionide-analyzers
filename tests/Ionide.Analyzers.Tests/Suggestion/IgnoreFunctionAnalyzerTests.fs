@@ -10,7 +10,7 @@ let mutable projectOptions: FSharpProjectOptions = FSharpProjectOptions.zero
 [<SetUp>]
 let Setup () =
     task {
-        let! opts = mkOptionsFromProject "net7.0" []
+        let! opts = mkOptionsFromProject "net8.0" []
 
         projectOptions <- opts
     }
