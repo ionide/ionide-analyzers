@@ -110,6 +110,8 @@ let private analyze
 
                     if ff.FieldType.IsFunctionType || ff.FieldType.IsAnonRecordType then
                         false
+                    elif not (Seq.isEmpty ff.FieldType.GenericArguments) then
+                        false
                     else
 
                     primitives.Contains ff.FieldType.BasicQualifiedName

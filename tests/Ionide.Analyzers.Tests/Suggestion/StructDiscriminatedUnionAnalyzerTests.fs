@@ -235,3 +235,18 @@ type Foo =
         let! msgs = structDiscriminatedUnionCliAnalyzer ctx
         Assert.That(msgs, Is.Empty)
     }
+
+[<Test>]
+let ``negative: int array`` () =
+    async {
+        let source =
+            """module Foo
+
+type SingleCaseDU = | One of int[]
+type TwoCaseDU = | Empty | Full of int[]
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = structDiscriminatedUnionCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
