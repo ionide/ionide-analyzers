@@ -1,5 +1,12 @@
 # Changelog
 
+
+## 0.14.0 - 2025-01-08
+
+### Changed
+
+* Bump FSharp.Analyzers.SDK to `0.29.0`. [#139](https://github.com/ionide/ionide-analyzers/pull/139)
+
 ## 0.13.1 - 2025-01-08
 
 ### Fixed
