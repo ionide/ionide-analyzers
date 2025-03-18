@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.14.2 - 2025-03-18
+
+### Fixed
+
+* InvalidOperationException on generic discriminated unions. [#142](https://github.com/ionide/ionide-analyzers/issues/142)
 
 ## 0.14.1 - 2025-03-06
 
