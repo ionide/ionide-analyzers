@@ -250,3 +250,19 @@ type TwoCaseDU = | Empty | Full of int[]
         let! msgs = structDiscriminatedUnionCliAnalyzer ctx
         Assert.That(msgs, Is.Empty)
     }
+
+[<Test>]
+let ``negative: generic types`` () =
+    async {
+        let source =
+            """module Foo
+
+type Validated<'valid, 'invalid> =
+    | Valid of 'valid
+    | Invalid of 'invalid
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = structDiscriminatedUnionCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
