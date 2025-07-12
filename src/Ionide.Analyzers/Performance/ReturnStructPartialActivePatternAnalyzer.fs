@@ -210,10 +210,11 @@ let runIfLanguageFeatureIsSupported
     (sourceText: ISourceText)
     (parsedInput: ParsedInput)
     (checkResults: FSharpCheckFileResults)
+    (projectOptions: AnalyzerProjectOptions)
     : Message list
     =
     let languageVersionShim =
-        LanguageVersionShim.fromFSharpProjectOptions checkResults.ProjectContext.ProjectOptions
+        LanguageVersionShim.fromOtherOptions projectOptions.OtherOptions
 
     if not (languageVersionShim.SupportsFeature(languageFeature.Value)) then
         []
@@ -229,6 +230,7 @@ let returnStructPartialActivePatternCliAnalyzer: Analyzer<CliContext> =
                     context.SourceText
                     context.ParseFileResults.ParseTree
                     context.CheckFileResults
+                    context.ProjectOptions
         }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
@@ -239,5 +241,9 @@ let returnStructPartialActivePatternEditorAnalyzer: Analyzer<EditorContext> =
             | None -> return []
             | Some checkResults ->
                 return
-                    runIfLanguageFeatureIsSupported context.SourceText context.ParseFileResults.ParseTree checkResults
+                    runIfLanguageFeatureIsSupported
+                        context.SourceText
+                        context.ParseFileResults.ParseTree
+                        checkResults
+                        context.ProjectOptions
         }
