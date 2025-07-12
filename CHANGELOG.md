@@ -1,6 +1,13 @@
 # Changelog
 
 
+
+## 0.14.6 - 2025-07-12
+
+### Fixed 
+
+* Update FSharp.Analyzers.SDK `0.32.0` and Fixed ReturnStructPartialActivePatternAnalyzer ProjectOptions when using TransparentCompiler in EditorContext [#152](https://github.com/ionide/ionide-analyzers/pull/152)
+
 ## 0.14.5 - 2025-05-17
 
 ### Changed
