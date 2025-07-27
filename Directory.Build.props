@@ -11,7 +11,7 @@
             Community F# analyzers
         </Description>
         <Copyright>Copyright Ionide © $([System.DateTime]::UtcNow.Year)</Copyright>
-        <PackageTags>F#, fsharp, analyzers</PackageTags>
+        <PackageTags>F#, fsharp, analyzers, fsharp-analyzer</PackageTags>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryUrl>https://github.com/ionide/ionide-analyzers</RepositoryUrl>
