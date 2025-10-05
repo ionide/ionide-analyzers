@@ -80,7 +80,8 @@ let private analyze (sourceText: ISourceText) (parsedInput: ParsedInput) : Messa
                             let m = Range.unionRanges m1.idRange m2.idRange
 
                             match hasIgnoreComment m with
-                            | Some _ ->
+                            | Some _ -> ()
+                            | None ->
                                 xs.Add
                                     {
                                         ModuleName = m1.idText
@@ -89,7 +90,6 @@ let private analyze (sourceText: ISourceText) (parsedInput: ParsedInput) : Messa
                                         Range = m
                                     }
                                 |> ignore
-                            | None -> ()
 
                             visit rest
                         | _ :: rest -> visit rest

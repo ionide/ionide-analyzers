@@ -31,6 +31,21 @@ let b = a = []
     }
 
 [<Test>]
+let ``value equals empty list with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+let a = [ 1; 2; 3 ]
+// IGNORE: IONIDE-008
+let b = a = []
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = listEqualsEmptyListCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``empty list equals value`` () =
     async {
         let source =
@@ -44,6 +59,21 @@ let b = [] = a
         Assert.That(msgs, Is.Not.Empty)
         let msg = msgs[0]
         Assert.That(Assert.messageContains message msg, Is.True)
+    }
+
+[<Test>]
+let ``empty list equals value with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+let a = [ 1; 2; 3 ]
+// IGNORE: IONIDE-008
+let b = [] = a
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = listEqualsEmptyListCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]

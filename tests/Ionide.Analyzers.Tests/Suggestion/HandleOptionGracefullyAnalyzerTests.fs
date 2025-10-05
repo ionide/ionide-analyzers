@@ -35,6 +35,23 @@ let value = Option.get option
     }
 
 [<Test>]
+let ``Option.get is detected with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+let option = Some 10
+// IGNORE: IONIDE-006
+let value = Option.get option
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = optionGetCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``ValueOption.get is detected`` () =
     async {
         let source =
@@ -49,6 +66,23 @@ let value = ValueOption.get voption
         let! msgs = optionGetCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains messageString msgs[0], Is.True)
+    }
+
+[<Test>]
+let ``ValueOption.get is detected with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+let voption = ValueSome 10
+// IGNORE: IONIDE-006
+let value = ValueOption.get voption
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = optionGetCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -69,6 +103,23 @@ let value = option.Value
     }
 
 [<Test>]
+let ``Option.Value member is detected with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+let option = Some 10
+// IGNORE: IONIDE-006
+let value = option.Value
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = optionGetCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``ValueOption.Value member is detected`` () =
     async {
         let source =
@@ -83,4 +134,21 @@ let value = voption.Value
         let! msgs = optionGetCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains messageString msgs[0], Is.True)
+    }
+
+[<Test>]
+let ``ValueOption.Value member is detected with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+let voption = ValueSome 10
+// IGNORE: IONIDE-006
+let value = voption.Value
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = optionGetCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }

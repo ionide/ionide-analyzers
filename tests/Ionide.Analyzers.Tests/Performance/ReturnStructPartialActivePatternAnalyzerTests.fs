@@ -41,6 +41,21 @@ let (|IsEvent|_|) (a:int) = if a % 2 = 0 then Some () else None
     }
 
 [<Test>]
+let ``partial active pattern with argument with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-009
+let (|IsEvent|_|) (a:int) = if a % 2 = 0 then Some () else None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``partial active pattern without argument`` () =
     async {
         let source =
@@ -57,6 +72,21 @@ let (|IsOneOrTwo|_|) = function | 1 -> Some() | 2 -> Some() | _ -> None
     }
 
 [<Test>]
+let ``partial active pattern without argument with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-009
+let (|IsOneOrTwo|_|) = function | 1 -> Some() | 2 -> Some() | _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``partial active pattern that return function`` () =
     async {
         let source =
@@ -70,6 +100,21 @@ let inline (|Delimited|_|) (str: 'a list) : 'a list -> ('a list * 'a list * int 
         Assert.That(msgs, Is.Not.Empty)
         let msg = msgs[0]
         Assert.That(Assert.messageContains message msg, Is.True)
+    }
+
+[<Test>]
+let ``partial active pattern that return function with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-009
+let inline (|Delimited|_|) (str: 'a list) : 'a list -> ('a list * 'a list * int * int) option = fun _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -108,6 +153,25 @@ let (|IsEvent|_|) (a:int) =
     }
 
 [<Test>]
+let ``fix data from match clauses with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-009
+let (|IsEvent|_|) (a:int) =
+    let x y = ()
+    match a with
+    | even when even % 2 = 0 -> Some()
+    | _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``fix data from match lambda`` () =
     async {
         let source =
@@ -128,6 +192,25 @@ let (|IsOneOrTwo|_|) = function
     }
 
 [<Test>]
+let ``fix data from match lambda with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-009
+let (|IsOneOrTwo|_|) = function
+    | 1 -> Some ()
+    | 2 -> Some ()
+    | 3 -> None
+    | _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``fix data from binding with return type`` () =
     async {
         let source =
@@ -145,6 +228,25 @@ let (|IsEvent|_|) (a:int) : unit option =
         Assert.That(msgs, Is.Not.Empty)
         let msg = msgs[0]
         Assert.That(msg.Fixes.Length, Is.EqualTo 4)
+    }
+
+[<Test>]
+let ``fix data from binding with return type with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-009
+let (|IsEvent|_|) (a:int) : unit option =
+    let x y = ()
+    match a with
+    | even when even % 2 = 0 -> Some()
+    | _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 // We are not detecting the None in the visit for now.
@@ -177,6 +279,32 @@ let (|EndsWithDualListApp|_|) _ : unit option =
     }
 
 [<Test>]
+let ``fix data from binding with return type + if then else with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-009
+let (|EndsWithDualListApp|_|) _ : unit option =
+    if not false then
+        None
+    else
+        let mutable otherArgs = null
+
+        let rec visit (args: int list) =
+            match args with
+            | [] -> None
+            | _ -> None
+
+        visit []
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``fix data from recursive binding`` () =
     async {
         let source =
@@ -196,6 +324,27 @@ let rec (|OpenL|_|) =
         Assert.That(msgs, Is.Not.Empty)
         let msg = msgs[0]
         Assert.That(msg.Fixes.Length, Is.EqualTo 4)
+    }
+
+[<Test>]
+let ``fix data from recursive binding with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+open FSharp.Compiler.Syntax
+
+// IGNORE: IONIDE-009
+let rec (|OpenL|_|) =
+    function
+    | SynModuleDecl.Open(target, range) :: OpenL(xs, ys) -> Some((target, range) :: xs, ys)
+    | SynModuleDecl.Open(target, range) :: ys -> Some([ target, range ], ys)
+    | _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -221,4 +370,27 @@ module Foo =
         let msg = msgs[0]
         let attributeFix = msg.Fixes.[0]
         Assert.That("[<return: Struct>]\n    ", Is.EqualTo attributeFix.ToText)
+    }
+
+[<Test>]
+let ``fix data for indented binding with ignore comment`` () =
+    async {
+        let source =
+            """namespace Lib
+
+module Foo =
+
+    open FSharp.Compiler.Syntax
+
+    // IGNORE: IONIDE-009
+    let rec (|OpenL|_|) =
+        function
+        | SynModuleDecl.Open(target, range) :: OpenL(xs, ys) -> Some((target, range) :: xs, ys)
+        | SynModuleDecl.Open(target, range) :: ys -> Some([ target, range ], ys)
+        | _ -> None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = returnStructPartialActivePatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }

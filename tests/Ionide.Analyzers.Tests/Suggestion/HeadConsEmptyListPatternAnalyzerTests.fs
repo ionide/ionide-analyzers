@@ -32,3 +32,22 @@ do
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains message msgs[0], Is.True)
     }
+
+[<Test>]
+let ``x :: [] is detected with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+do
+    match [] with
+    // IGNORE: IONIDE-007
+    | x :: [] -> ()
+    | _ -> ()
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = headConsEmptyListPatternCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }

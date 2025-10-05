@@ -35,6 +35,24 @@ let b: int[] = Array.empty
     }
 
 [<Test>]
+let ``array should produce diagnostic with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+// IGNORE: IONIDE-002
+let a (b: int[]) = ()
+// IGNORE: IONIDE-002
+let b: int[] = Array.empty
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``alt array should produce diagnostic`` () =
     async {
         let source =
@@ -51,6 +69,24 @@ let b: array<int> = Array.empty
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains message msgs.[0], Is.True)
         Assert.That(Assert.messageContains message msgs.[1], Is.True)
+    }
+
+[<Test>]
+let ``alt array should produce diagnostic with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+// IGNORE: IONIDE-002
+let a (b: array<int>) = ()
+// IGNORE: IONIDE-002
+let b: array<int> = Array.empty
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -73,6 +109,24 @@ val b: int[]
     }
 
 [<Test>]
+let ``array in val sig should produce diagnostic with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+// IGNORE: IONIDE-002
+val a: b: int[] -> unit
+// IGNORE: IONIDE-002
+val b: int[]
+    """
+
+        let ctx = getContextForSignature projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``alt array in val sig should produce diagnostic`` () =
     async {
         let source =
@@ -92,6 +146,24 @@ val b: array<int>
     }
 
 [<Test>]
+let ``alt array in val sig should produce diagnostic with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+// IGNORE: IONIDE-002
+val a: b: array<int> -> unit
+// IGNORE: IONIDE-002
+val b: array<int>
+    """
+
+        let ctx = getContextForSignature projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``option should produce diagnostic`` () =
     async {
         let source =
@@ -108,6 +180,24 @@ let b: option<int> = None
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains message msgs.[0], Is.True)
         Assert.That(Assert.messageContains message msgs.[1], Is.True)
+    }
+
+[<Test>]
+let ``option should produce diagnostic with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+// IGNORE: IONIDE-002
+let a (b: option<int>) = ()
+// IGNORE: IONIDE-002
+let b: option<int> = None
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -258,6 +348,22 @@ let a: array<list<int>> = Array.empty
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains "Prefer postfix syntax for arrays." msgs[0], Is.True)
         Assert.That(Assert.messageContains "Prefer postfix syntax for lists." msgs[1], Is.True)
+    }
+
+[<Test>]
+let ``nested generics should produce diagnostic with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+// IGNORE: IONIDE-002
+let a: array<list<int>> = Array.empty
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = postfixGenericsAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]

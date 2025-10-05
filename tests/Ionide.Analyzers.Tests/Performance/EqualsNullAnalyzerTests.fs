@@ -34,6 +34,22 @@ do (a = null)
     }
 
 [<Test>]
+let ``a = null with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+let a = "3"
+// IGNORE: IONIDE-011
+do (a = null)
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``null = a`` () =
     async {
         let source =
@@ -48,6 +64,22 @@ do (null = a)
         Assert.That(msgs, Is.Not.Empty)
         let msg = msgs[0]
         Assert.That(Assert.messageContains equalsMessage msg, Is.True)
+    }
+
+[<Test>]
+let ``null = a with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+let a = "3"
+// IGNORE: IONIDE-011
+do (null = a)
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -71,6 +103,23 @@ a () = null
     }
 
 [<Test>]
+let ``equals fix with parens with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+let a () = "3"
+// IGNORE: IONIDE-011
+a () = null
+|> ignore
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``equals fix without parens`` () =
     async {
         let source =
@@ -87,6 +136,22 @@ let ``equals fix without parens`` () =
         Assert.That(Assert.messageContains equalsMessage msg, Is.True)
         let fix = msg.Fixes.[0]
         Assert.That("isNull \"meh\"", Is.EqualTo fix.ToText)
+    }
+
+[<Test>]
+let ``equals fix without parens with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-011
+"meh" = null
+|> ignore
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -107,6 +172,22 @@ do (a <> null)
     }
 
 [<Test>]
+let ``a <> null with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+let a = "3"
+// IGNORE: IONIDE-011
+do (a <> null)
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``null <> a`` () =
     async {
         let source =
@@ -121,6 +202,22 @@ do (null <> a)
         Assert.That(msgs, Is.Not.Empty)
         let msg = msgs[0]
         Assert.That(Assert.messageContains inEqualsMessage msg, Is.True)
+    }
+
+[<Test>]
+let ``null <> a with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+let a = "3"
+// IGNORE: IONIDE-011
+do (null <> a)
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
@@ -144,6 +241,23 @@ a () <> null
     }
 
 [<Test>]
+let ``inequals fix with parens with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+let a () = "3"
+// IGNORE: IONIDE-011
+a () <> null
+|> ignore
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``inequals fix without parens`` () =
     async {
         let source =
@@ -160,6 +274,22 @@ let ``inequals fix without parens`` () =
         Assert.That(Assert.messageContains inEqualsMessage msg, Is.True)
         let fix = msg.Fixes.[0]
         Assert.That("not (isNull \"meh\")", Is.EqualTo fix.ToText)
+    }
+
+[<Test>]
+let ``inequals fix without parens with ignore comment`` () =
+    async {
+        let source =
+            """module Lib
+
+// IGNORE: IONIDE-011
+"meh" <> null
+|> ignore
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = equalsNullCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]

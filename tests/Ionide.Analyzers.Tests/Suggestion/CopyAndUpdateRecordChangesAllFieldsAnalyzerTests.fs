@@ -95,3 +95,39 @@ let updated = { a with A = 2; B = 4 }
         let! msgs = copyAndUpdateRecordChangesAllFieldsCliAnalyzer ctx
         Assert.That(msgs, Is.Empty)
     }
+
+[<Test>]
+let ``single record field with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+type R = { A: int }
+let a = { A = 1 }
+// IGNORE: IONIDE-001
+let updated = { a with A = 2 }
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = copyAndUpdateRecordChangesAllFieldsCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
+let ``multiple record field with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+type R = { A: int; B:int; C:int }
+let a = { A = 1; B = 2; C = 3 }
+// IGNORE: IONIDE-001
+let updated = { a with A = 2; B = 4; C = 5 }
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = copyAndUpdateRecordChangesAllFieldsCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }

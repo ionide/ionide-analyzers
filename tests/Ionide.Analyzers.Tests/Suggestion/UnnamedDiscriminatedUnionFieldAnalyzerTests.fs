@@ -32,6 +32,23 @@ type DU =
     }
 
 [<Test>]
+let ``one named field and one unnamed field with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+type DU =
+    // IGNORE: IONIDE-004
+    | Foo of bar: string * int
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = unnamedDiscriminatedUnionFieldCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``single unnamed field shouldn't trigger`` () =
     async {
         let source =
@@ -61,6 +78,22 @@ exception Exception3 of int * noOkCase: string // kind of not ok
         let! msgs = unnamedDiscriminatedUnionFieldCliAnalyzer ctx
         Assert.That(msgs, Is.Not.Empty)
         Assert.That(Assert.messageContains "Field inside union case is not named!" msgs[0], Is.True)
+    }
+
+[<Test>]
+let ``fields in exception are detected with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+// IGNORE: IONIDE-004
+exception Exception3 of int * noOkCase: string // kind of not ok
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = unnamedDiscriminatedUnionFieldCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]

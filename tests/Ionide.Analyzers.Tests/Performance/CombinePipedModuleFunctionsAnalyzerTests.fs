@@ -36,6 +36,24 @@ let a b =
     }
 
 [<TestCaseSource(nameof collectionTypes)>]
+let ``pipe map to map with ignore comment`` moduleName =
+    async {
+        let source =
+            $"""module Lib
+
+let a b =
+    b
+    // IGNORE: IONIDE-010
+    |> %s{moduleName}.map (fun x -> x)
+    |> %s{moduleName}.map (fun y -> y)
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = combinePipedModuleFunctionsCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<TestCaseSource(nameof collectionTypes)>]
 let ``pipe filter to map`` moduleName =
     async {
         let source =
@@ -61,6 +79,24 @@ let a b =
     }
 
 [<TestCaseSource(nameof collectionTypes)>]
+let ``pipe filter to map with ignore comment`` moduleName =
+    async {
+        let source =
+            $"""module Lib
+
+let a b =
+    b
+    // IGNORE: IONIDE-010
+    |> %s{moduleName}.filter (fun x -> x)
+    |> %s{moduleName}.map (fun y -> y)
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = combinePipedModuleFunctionsCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<TestCaseSource(nameof collectionTypes)>]
 let ``pipe map to filter`` moduleName =
     async {
         let source =
@@ -83,4 +119,22 @@ let a b =
                 msg,
             Is.True
         )
+    }
+
+[<TestCaseSource(nameof collectionTypes)>]
+let ``pipe map to filter with ignore comment`` moduleName =
+    async {
+        let source =
+            $"""module Lib
+
+let a b =
+    b
+    // IGNORE: IONIDE-010
+    |> %s{moduleName}.map (fun x -> x)
+    |> %s{moduleName}.filter (fun y -> y)
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = combinePipedModuleFunctionsCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }

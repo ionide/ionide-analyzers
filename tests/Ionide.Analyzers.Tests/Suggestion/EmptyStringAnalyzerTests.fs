@@ -39,6 +39,23 @@ let x = s = ""
     }
 
 [<Test>]
+let ``Operator based test for zero-length with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+let s = "foo"
+// IGNORE: IONIDE-005
+let x = s = ""
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = emptyStringCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
+    }
+
+[<Test>]
 let ``Operator based test for zero-length reversed`` () =
     async {
         let source =
@@ -59,6 +76,23 @@ let x = "" = s
                 msgs[0],
             Is.True
         )
+    }
+
+[<Test>]
+let ``Operator based test for zero-length reversed with ignore comment`` () =
+    async {
+        let source =
+            """
+module M
+
+let s = "foo"
+// IGNORE: IONIDE-005
+let x = "" = s
+    """
+
+        let ctx = getContext projectOptions source
+        let! msgs = emptyStringCliAnalyzer ctx
+        Assert.That(msgs, Is.Empty)
     }
 
 [<Test>]
