@@ -1,13 +1,25 @@
 module Ionide.Analyzers.Suggestion.HandleOptionGracefullyAnalyzer
 
+open Ionide.Analyzers
 open System
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.TASTCollecting
 open FSharp.Compiler.Symbols
 open FSharp.Compiler.Text
+open FSharp.Compiler.Syntax
 
-let analyze (typedTree: FSharpImplementationFileContents option) =
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-006"
+
+let analyze (sourceText: ISourceText) (input: ParsedInput) (typedTree: FSharpImplementationFileContents option) =
     let messages = ResizeArray<Message>()
+
+    let comments =
+        match input with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let walker =
         { new TypedTreeCollectorBase() with
@@ -27,6 +39,7 @@ let analyze (typedTree: FSharpImplementationFileContents option) =
                      || fullyQualifiedCall = "Microsoft.FSharp.Core.FSharpOption`1.Value"
                      || fullyQualifiedCall = "Microsoft.FSharp.Core.FSharpValueOption`1.Value")
                     && args.Length = 1
+                    && hasIgnoreComment m |> Option.isNone
                 then
                     messages.Add
                         {
@@ -56,7 +69,7 @@ let shortDescription =
 let helpUri = "https://ionide.io/ionide-analyzers/suggestion/006.html"
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
-let optionGetCliAnalyzer (ctx: CliContext) = async { return analyze ctx.TypedTree }
+let optionGetCliAnalyzer (ctx: CliContext) = async { return analyze ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
-let optionGetEditorAnalyzer (ctx: EditorContext) = async { return analyze ctx.TypedTree }
+let optionGetEditorAnalyzer (ctx: EditorContext) = async { return analyze ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }

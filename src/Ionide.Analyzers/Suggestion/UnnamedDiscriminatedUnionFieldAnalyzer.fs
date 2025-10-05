@@ -1,18 +1,30 @@
 module Ionide.Analyzers.Suggestion.UnnamedDiscriminatedUnionFieldAnalyzer
 
+open Ionide.Analyzers
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
 open FSharp.Compiler.Syntax
+open FSharp.Compiler.Text
 
-let analyze parseTree =
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-004"
+
+let analyze (sourceText: ISourceText) parseTree =
     let messages = ResizeArray<Message>()
+
+    let comments =
+        match parseTree with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let visitor =
         { new SyntaxCollectorBase() with
             override x.WalkUnionCase(_, unionCase: SynUnionCase) =
                 match unionCase with
                 | SynUnionCase(caseType = SynUnionCaseKind.Fields [ _ ]) -> ()
-                | SynUnionCase(caseType = SynUnionCaseKind.Fields fields) ->
+                | SynUnionCase(caseType = SynUnionCaseKind.Fields fields; range = range) when hasIgnoreComment range |> Option.isNone ->
                     let unnamedFields =
                         fields
                         |> List.choose (fun (SynField(idOpt = idOpt; range = mField)) ->
@@ -48,8 +60,8 @@ let helpUri = "https://ionide.io/ionide-analyzers/suggestion/004.html"
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
 let unnamedDiscriminatedUnionFieldCliAnalyzer (ctx: CliContext) =
-    async { return analyze ctx.ParseFileResults.ParseTree }
+    async { return analyze ctx.SourceText ctx.ParseFileResults.ParseTree }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
 let unnamedDiscriminatedUnionFieldEditorAnalyzer (ctx: EditorContext) =
-    async { return analyze ctx.ParseFileResults.ParseTree }
+    async { return analyze ctx.SourceText ctx.ParseFileResults.ParseTree }

@@ -1,5 +1,6 @@
 module Ionide.Analyzers.Suggestion.StructDiscriminatedUnionAnalyzer
 
+open Ionide.Analyzers
 open System.Collections.Generic
 open FSharp.Compiler.Text
 open FSharp.Compiler.Syntax
@@ -9,6 +10,9 @@ open FSharp.Analyzers.SDK.ASTCollecting
 open System
 open FSharp.Compiler.CodeAnalysis
 open Ionide.Analyzers.TypedOperations
+
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-012"
 
 [<Literal>]
 let message = "Consider adding [<Struct>] to Discriminated Union"
@@ -63,6 +67,13 @@ let private analyze
     =
     let typeDefs = HashSet<FixData>()
 
+    let comments =
+        match parsedInput with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
+
     let collector =
         { new SyntaxCollectorBase() with
             override x.WalkTypeDefn
@@ -80,7 +91,7 @@ let private analyze
                 else
 
                 match List.tryLast typeName, typeRepr with
-                | Some typeName, SynTypeDefnRepr.Simple(simpleRepr = SynTypeDefnSimpleRepr.Union _) ->
+                | Some typeName, SynTypeDefnRepr.Simple(SynTypeDefnSimpleRepr.Union _, range) when hasIgnoreComment range |> Option.isNone ->
                     typeDefs.Add
                         {
                             LeadingKeyword = lk

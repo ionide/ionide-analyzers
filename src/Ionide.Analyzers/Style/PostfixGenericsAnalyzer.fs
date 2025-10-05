@@ -1,9 +1,13 @@
 ﻿module Ionide.Analyzers.Style.PostfixGenericsAnalyzer
 
+open Ionide.Analyzers
 open FSharp.Compiler.Text
 open FSharp.Compiler.Syntax
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
+
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-002"
 
 [<CliAnalyzer("PostfixGenericsAnalyzer",
               "Detect if generic type should be in the postfix position.",
@@ -12,13 +16,22 @@ let postfixGenericsAnalyzer: Analyzer<CliContext> =
     fun (context: CliContext) ->
         async {
             let ts = ResizeArray<string * range>()
+            let sourceText = context.SourceText
+            let input = context.ParseFileResults.ParseTree
+
+            let comments =
+                match input with
+                | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+                | _ -> []
+
+            let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
             let collector =
                 { new SyntaxCollectorBase() with
                     override x.WalkType(_, t: SynType) =
-                        match t with
-                        | SynType.Array _ -> ts.Add("Prefer postfix syntax for arrays.", t.Range)
-                        | SynType.App(typeName = SynType.LongIdent synLongIdent; isPostfix = false) ->
+                        match t, hasIgnoreComment t.Range with
+                        | SynType.Array _, None -> ts.Add("Prefer postfix syntax for arrays.", t.Range)
+                        | SynType.App(typeName = SynType.LongIdent synLongIdent; isPostfix = false), None ->
                             match synLongIdent.LongIdent with
                             | [ ident ] ->
                                 match ident.idText with

@@ -1,5 +1,6 @@
 ﻿module Ionide.Analyzers.Suggestion.CopyAndUpdateRecordChangesAllFieldsAnalyzer
 
+open Ionide.Analyzers
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
 open FSharp.Analyzers.SDK.TASTCollecting
@@ -9,7 +10,17 @@ open FSharp.Compiler.Syntax
 
 type UpdateRecord = SynExprRecordField list * range * range
 
-let analyze parseTree (typedTree: FSharpImplementationFileContents option) =
+let ignoreComment = "IGNORE: IONIDE-001"
+
+let analyze sourceText parseTree (typedTree: FSharpImplementationFileContents option) =
+
+    let comments =
+        match parseTree with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
+
     let untypedRecordUpdates =
         let xs = ResizeArray<UpdateRecord>()
 
@@ -17,7 +28,7 @@ let analyze parseTree (typedTree: FSharpImplementationFileContents option) =
             { new SyntaxCollectorBase() with
                 override x.WalkExpr(_, e: SynExpr) =
                     match e with
-                    | SynExpr.Record(copyInfo = Some(synExpr, (withRange, _)); recordFields = fields) ->
+                    | SynExpr.Record(copyInfo = Some(synExpr, (withRange, _)); recordFields = fields; range = m) when not <| hasIgnoreComment m ->
                         let fixRange = Range.unionRanges synExpr.Range (Range.shiftEnd 0 1 withRange)
                         xs.Add(fields, e.Range, fixRange)
                     | _ -> ()
@@ -79,8 +90,8 @@ let helpUri = "https://ionide.io/ionide-analyzers/suggestion/001.html"
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
 let copyAndUpdateRecordChangesAllFieldsCliAnalyzer: Analyzer<CliContext> =
-    fun (context: CliContext) -> async { return analyze context.ParseFileResults.ParseTree context.TypedTree }
+    fun (context: CliContext) -> async { return analyze context.SourceText context.ParseFileResults.ParseTree context.TypedTree }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
 let copyAndUpdateRecordChangesAllFieldsEditorAnalyzer: Analyzer<EditorContext> =
-    fun (context: EditorContext) -> async { return analyze context.ParseFileResults.ParseTree context.TypedTree }
+    fun (context: EditorContext) -> async { return analyze context.SourceText context.ParseFileResults.ParseTree context.TypedTree }

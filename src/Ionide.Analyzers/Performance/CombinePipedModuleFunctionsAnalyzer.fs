@@ -1,11 +1,15 @@
 module Ionide.Analyzers.Performance.CombinePipedModuleFunctionsAnalyzer
 
+open Ionide.Analyzers
 open System.Collections.Generic
 open FSharp.Compiler.Text
 open FSharp.Compiler.Syntax
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
 open Ionide.Analyzers.UntypedOperations
+
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-010"
 
 [<return: Struct>]
 let (|PipeInfixApp|_|) synExpr =
@@ -54,8 +58,15 @@ type MessageData =
         Range: Range
     }
 
-let private analyze (parsedInput: ParsedInput) : Message list =
+let private analyze (sourceText: ISourceText) (parsedInput: ParsedInput) : Message list =
     let xs = HashSet<MessageData>()
+
+    let comments =
+        match parsedInput with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let collector =
         { new SyntaxCollectorBase() with
@@ -68,14 +79,17 @@ let private analyze (parsedInput: ParsedInput) : Message list =
                         | ModuleFunction(m1, f1) :: ModuleFunction(m2, f2) :: rest when m1.idText = m2.idText ->
                             let m = Range.unionRanges m1.idRange m2.idRange
 
-                            xs.Add
-                                {
-                                    ModuleName = m1.idText
-                                    Function1 = f1.idText
-                                    Function2 = f2.idText
-                                    Range = m
-                                }
-                            |> ignore
+                            match hasIgnoreComment m with
+                            | Some _ ->
+                                xs.Add
+                                    {
+                                        ModuleName = m1.idText
+                                        Function1 = f1.idText
+                                        Function2 = f2.idText
+                                        Range = m
+                                    }
+                                |> ignore
+                            | None -> ()
 
                             visit rest
                         | _ :: rest -> visit rest
@@ -116,8 +130,8 @@ let helpUri = "https://ionide.io/ionide-analyzers/performance/010.html"
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
 let combinePipedModuleFunctionsCliAnalyzer: Analyzer<CliContext> =
-    fun (context: CliContext) -> async { return analyze context.ParseFileResults.ParseTree }
+    fun (context: CliContext) -> async { return analyze context.SourceText context.ParseFileResults.ParseTree }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
 let combinePipedModuleFunctionsEditorAnalyzer: Analyzer<EditorContext> =
-    fun (context: EditorContext) -> async { return analyze context.ParseFileResults.ParseTree }
+    fun (context: EditorContext) -> async { return analyze context.SourceText context.ParseFileResults.ParseTree }

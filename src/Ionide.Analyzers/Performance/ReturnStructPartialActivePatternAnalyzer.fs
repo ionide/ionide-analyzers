@@ -1,5 +1,6 @@
 module Ionide.Analyzers.Performance.ReturnStructPartialActivePatternAnalyzer
 
+open Ionide.Analyzers
 open System
 open System.Collections.Generic
 open FSharp.Compiler.CodeAnalysis
@@ -11,6 +12,9 @@ open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
 open Ionide.Analyzers
 open Ionide.Analyzers.TypedOperations
+
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-009"
 
 [<Literal>]
 let message = "Consider adding [<return: Struct>] to partial active pattern."
@@ -97,6 +101,13 @@ let rec collectSomeAndNoneFromExprBody (expr: SynExpr) (finalContinuation: Ident
 let analyze (sourceText: ISourceText) (parsedInput: ParsedInput) (checkResults: FSharpCheckFileResults) : Message list =
     let idents = HashSet<FixData>()
 
+    let comments =
+        match parsedInput with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
+
     let collector =
         { new SyntaxCollectorBase() with
             override x.WalkSynModuleDecl(_path, decl) =
@@ -109,7 +120,8 @@ let analyze (sourceText: ISourceText) (parsedInput: ParsedInput) (checkResults: 
                             attributes = attributes
                             returnInfo = returnInfo
                             expr = expr
-                            trivia = { LeadingKeyword = leadingKeyword }) ->
+                            trivia = { LeadingKeyword = leadingKeyword }
+                            range = m) when not <| hasIgnoreComment m ->
                             if not (List.exists hasReturnStructAttribute attributes) then
                                 let someOrNone = collectSomeAndNoneFromExprBody expr id
 

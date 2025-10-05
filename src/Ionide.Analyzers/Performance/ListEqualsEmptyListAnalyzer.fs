@@ -1,5 +1,6 @@
 module Ionide.Analyzers.Performance.ListEqualsEmptyListAnalyzer
 
+open Ionide.Analyzers
 open System.Collections.Generic
 open FSharp.Compiler.Text
 open FSharp.Compiler.Syntax
@@ -8,6 +9,9 @@ open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.ASTCollecting
 open Ionide.Analyzers.UntypedOperations
 open Ionide.Analyzers.TypedOperations
+
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-008"
 
 [<Literal>]
 let message = "list = [] is suboptimal, use List.isEmpty"
@@ -29,12 +33,19 @@ let private analyze
     =
     let xs = HashSet<EqualsOperation>()
 
+    let comments =
+        match parsedInput with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
+
     let collector =
         { new SyntaxCollectorBase() with
             override x.WalkExpr(path, synExpr) =
                 match synExpr with
                 | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(operatorIdent, argExpr), EmptyList, m)
-                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(operatorIdent, EmptyList), argExpr, m) ->
+                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(operatorIdent, EmptyList), argExpr, m) when not <| hasIgnoreComment m ->
                     xs.Add(EqualsOperation(operatorIdent, argExpr.Range, m)) |> ignore
                 | _ -> ()
         }

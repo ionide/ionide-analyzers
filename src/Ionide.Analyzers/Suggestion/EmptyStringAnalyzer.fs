@@ -1,9 +1,12 @@
 module Ionide.Analyzers.Suggestion.EmptyStringAnalyzer
 
+open Ionide.Analyzers
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.TASTCollecting
 open FSharp.Compiler.Symbols
 open FSharp.Compiler.Text
+open FSharp.Compiler.Syntax
+open FSharp.Compiler.SyntaxTrivia
 
 [<return: Struct>]
 let (|EmptyStringConst|_|) (e: FSharpExpr) =
@@ -14,15 +17,25 @@ let (|EmptyStringConst|_|) (e: FSharpExpr) =
         ValueSome()
     | _ -> ValueNone
 
-let analyze (typedTree: FSharpImplementationFileContents) =
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-005"
+
+let analyze (sourceText: ISourceText) (input: ParsedInput) (typedTree: FSharpImplementationFileContents) =
     let ranges = ResizeArray<range>()
+
+    let comments =
+        match input with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let walker =
         { new TypedTreeCollectorBase() with
             override _.WalkCall _ (mfv: FSharpMemberOrFunctionOrValue) _ _ (args: FSharpExpr list) (m: range) =
-                match (mfv.Assembly.SimpleName, mfv.FullName, args) with
-                | "FSharp.Core", "Microsoft.FSharp.Core.Operators.(=)", [ _; EmptyStringConst ]
-                | "FSharp.Core", "Microsoft.FSharp.Core.Operators.(=)", [ EmptyStringConst; _ ] -> ranges.Add m
+                match mfv.Assembly.SimpleName, mfv.FullName, args, hasIgnoreComment m with
+                | "FSharp.Core", "Microsoft.FSharp.Core.Operators.(=)", [ _; EmptyStringConst ], None
+                | "FSharp.Core", "Microsoft.FSharp.Core.Operators.(=)", [ EmptyStringConst; _ ], None -> ranges.Add m
                 | _ -> ()
 
         }
@@ -54,8 +67,8 @@ let helpUri = "https://ionide.io/ionide-analyzers/suggestion/005.html"
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
 let emptyStringEditorAnalyzer (ctx: EditorContext) =
-    async { return ctx.TypedTree |> Option.map analyze |> Option.defaultValue [] }
+    async { return ctx.TypedTree |> Option.map (analyze ctx.SourceText ctx.ParseFileResults.ParseTree) |> Option.defaultValue [] }
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
 let emptyStringCliAnalyzer (ctx: CliContext) =
-    async { return ctx.TypedTree |> Option.map analyze |> Option.defaultValue [] }
+    async { return ctx.TypedTree |> Option.map (analyze ctx.SourceText ctx.ParseFileResults.ParseTree) |> Option.defaultValue [] }

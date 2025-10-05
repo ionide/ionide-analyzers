@@ -1,12 +1,24 @@
 ﻿module Ionide.Analyzers.Suggestion.IgnoreFunctionAnalyzer
 
+open Ionide.Analyzers
 open FSharp.Analyzers.SDK
 open FSharp.Analyzers.SDK.TASTCollecting
 open FSharp.Compiler.Symbols
 open FSharp.Compiler.Text
+open FSharp.Compiler.Syntax
 
-let analyzer (typedTree: FSharpImplementationFileContents option) =
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-003"
+
+let analyzer (sourceText: ISourceText) (input: ParsedInput) (typedTree: FSharpImplementationFileContents option) =
     let messages = ResizeArray<Message>()
+
+    let comments =
+        match input with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let tastCollector =
         { new TypedTreeCollectorBase() with
@@ -15,6 +27,7 @@ let analyzer (typedTree: FSharpImplementationFileContents option) =
                     mfv.FullName = "Microsoft.FSharp.Core.Operators.ignore"
                     && args.Length = 1
                     && args.[0].Type.IsFunctionType
+                    && hasIgnoreComment m |> Option.isNone
                 then
                     messages.Add
                         {
@@ -43,7 +56,7 @@ let shortDescription = "A function is being ignored. Did you mean to execute thi
 let helpUri = "https://ionide.io/ionide-analyzers/suggestion/003.html"
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
-let ignoreFunctionCliAnalyzer (ctx: CliContext) = async { return analyzer ctx.TypedTree }
+let ignoreFunctionCliAnalyzer (ctx: CliContext) = async { return analyzer ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
-let ignoreFunctionEditorAnalyzer (ctx: EditorContext) = async { return analyzer ctx.TypedTree }
+let ignoreFunctionEditorAnalyzer (ctx: EditorContext) = async { return analyzer ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }

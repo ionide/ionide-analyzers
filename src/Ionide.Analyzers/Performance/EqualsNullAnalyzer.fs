@@ -1,5 +1,6 @@
 module Ionide.Analyzers.Performance.EqualsNullAnalyzer
 
+open Ionide.Analyzers
 open System.Collections.Generic
 open FSharp.Compiler.Text
 open FSharp.Compiler.Syntax
@@ -8,6 +9,9 @@ open FSharp.Analyzers.SDK.ASTCollecting
 open Ionide.Analyzers.UntypedOperations
 open Ionide.Analyzers.TypedOperations
 open FSharp.Compiler.CodeAnalysis
+
+[<Literal>]
+let ignoreComment = "IGNORE: IONIDE-011"
 
 [<Literal>]
 let equalsMessage = "`a = null` is suboptimal, use `isNull a` instead."
@@ -34,17 +38,24 @@ let private analyze
     =
     let xs = HashSet<EqualsNullOperation>()
 
+    let comments =
+        match parsedInput with
+        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
+        | _ -> []
+
+    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
+
     let collector =
         { new SyntaxCollectorBase() with
             override x.WalkExpr(path, synExpr) =
                 match synExpr with
                 | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(opIdent, argExpr), SynExpr.Null _, m)
-                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(opIdent, SynExpr.Null _), argExpr, m) ->
+                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(opIdent, SynExpr.Null _), argExpr, m) when not <| hasIgnoreComment m ->
                     xs.Add(EqualsNullOperation(false, argExpr.Range, opIdent, addParens argExpr, m))
                     |> ignore
 
                 | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpInequality(opIdent, argExpr), SynExpr.Null _, m)
-                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpInequality(opIdent, SynExpr.Null _), argExpr, m) ->
+                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpInequality(opIdent, SynExpr.Null _), argExpr, m) when not <| hasIgnoreComment m ->
                     xs.Add(EqualsNullOperation(true, argExpr.Range, opIdent, addParens argExpr, m))
                     |> ignore
                 | _ -> ()
