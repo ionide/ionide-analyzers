@@ -11,12 +11,7 @@ let ignoreComment = "IGNORE: IONIDE-004"
 
 let analyze (sourceText: ISourceText) parseTree =
     let messages = ResizeArray<Message>()
-
-    let comments =
-        match parseTree with
-        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
-        | _ -> []
-
+    let comments = InputOperations.getCodeComments parseTree
     let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let visitor =

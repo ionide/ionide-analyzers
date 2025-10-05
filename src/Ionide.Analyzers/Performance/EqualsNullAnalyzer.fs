@@ -37,12 +37,7 @@ let private analyze
     : Message list
     =
     let xs = HashSet<EqualsNullOperation>()
-
-    let comments =
-        match parsedInput with
-        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
-        | _ -> []
-
+    let comments = InputOperations.getCodeComments parsedInput
     let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
 
     let collector =

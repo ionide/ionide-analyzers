@@ -12,12 +12,7 @@ let ignoreComment = "IGNORE: IONIDE-003"
 
 let analyzer (sourceText: ISourceText) (input: ParsedInput) (typedTree: FSharpImplementationFileContents option) =
     let messages = ResizeArray<Message>()
-
-    let comments =
-        match input with
-        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
-        | _ -> []
-
+    let comments = InputOperations.getCodeComments input
     let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let tastCollector =

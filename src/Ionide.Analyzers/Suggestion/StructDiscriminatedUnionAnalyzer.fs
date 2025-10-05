@@ -66,12 +66,7 @@ let private analyze
     : Message list
     =
     let typeDefs = HashSet<FixData>()
-
-    let comments =
-        match parsedInput with
-        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
-        | _ -> []
-
+    let comments = InputOperations.getCodeComments parsedInput
     let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let collector =

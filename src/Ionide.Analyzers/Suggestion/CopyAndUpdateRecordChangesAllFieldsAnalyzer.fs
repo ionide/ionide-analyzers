@@ -13,12 +13,7 @@ type UpdateRecord = SynExprRecordField list * range * range
 let ignoreComment = "IGNORE: IONIDE-001"
 
 let analyze sourceText parseTree (typedTree: FSharpImplementationFileContents option) =
-
-    let comments =
-        match parseTree with
-        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
-        | _ -> []
-
+    let comments = InputOperations.getCodeComments parseTree
     let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
 
     let untypedRecordUpdates =

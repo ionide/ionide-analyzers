@@ -100,12 +100,7 @@ let rec collectSomeAndNoneFromExprBody (expr: SynExpr) (finalContinuation: Ident
 
 let analyze (sourceText: ISourceText) (parsedInput: ParsedInput) (checkResults: FSharpCheckFileResults) : Message list =
     let idents = HashSet<FixData>()
-
-    let comments =
-        match parsedInput with
-        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
-        | _ -> []
-
+    let comments = InputOperations.getCodeComments parsedInput
     let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
 
     let collector =

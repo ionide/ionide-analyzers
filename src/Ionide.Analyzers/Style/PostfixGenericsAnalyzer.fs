@@ -11,12 +11,7 @@ let ignoreComment = "IGNORE: IONIDE-002"
 
 let analyze (sourceText: ISourceText) (input: ParsedInput) =
     let ts = ResizeArray<string * range>()
-
-    let comments =
-        match input with
-        | ParsedInput.ImplFile parsedFileInput -> parsedFileInput.Trivia.CodeComments
-        | ParsedInput.SigFile parsedSigFileInput -> parsedSigFileInput.Trivia.CodeComments
-
+    let comments = InputOperations.getCodeComments input
     let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText
 
     let collector =
