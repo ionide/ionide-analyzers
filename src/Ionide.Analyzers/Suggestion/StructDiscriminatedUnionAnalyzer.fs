@@ -90,8 +90,8 @@ let private analyze
                     ()
                 else
 
-                match List.tryLast typeName, typeRepr with
-                | Some typeName, SynTypeDefnRepr.Simple(SynTypeDefnSimpleRepr.Union _, range) when hasIgnoreComment range |> Option.isNone ->
+                match List.tryLast typeName, typeRepr, hasIgnoreComment m with
+                | Some typeName, SynTypeDefnRepr.Simple(simpleRepr = SynTypeDefnSimpleRepr.Union _), None ->
                     typeDefs.Add
                         {
                             LeadingKeyword = lk

@@ -7,9 +7,7 @@ open FSharp.Compiler.Text
 [<RequireQualifiedAccess>]
 module Ignore =
     
-    /// A standard pattern within an analyzer is to look for a specific comment preceding a problematic line,
-    /// indicating "suppress the analyzer on this line".
-    /// This function performs that common check, returning the comment that caused the analyzer to deactivate.
+    /// checks there is an ignore comment on the line above the range
     let hasComment
         (magicComment : string)
         (comments : CommentTrivia list)
@@ -26,6 +24,5 @@ module Ignore =
                     false
                 else
                     let lineOfComment = sourceText.GetLineString (r.StartLine - 1) // 0-based
-
                     lineOfComment.Contains (magicComment, StringComparison.OrdinalIgnoreCase)
         )

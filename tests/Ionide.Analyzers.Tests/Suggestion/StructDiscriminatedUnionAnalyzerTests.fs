@@ -113,8 +113,8 @@ let ``du with a StructuredFormatDisplay attribute with ignore comment`` () =
         let source =
             """module Lib
 
-[<StructuredFormatDisplay("{DisplayText}")>]
 // IGNORE: IONIDE-012
+[<StructuredFormatDisplay("{DisplayText}")>]
 type Foo =
     | Bar
     | Barry
