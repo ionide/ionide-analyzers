@@ -14,7 +14,9 @@ let ignoreComment = "IGNORE: IONIDE-001"
 
 let analyze sourceText parseTree (typedTree: FSharpImplementationFileContents option) =
     let comments = InputOperations.getCodeComments parseTree
-    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
+
+    let hasIgnoreComment =
+        Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
 
     let untypedRecordUpdates =
         let xs = ResizeArray<UpdateRecord>()
@@ -23,7 +25,9 @@ let analyze sourceText parseTree (typedTree: FSharpImplementationFileContents op
             { new SyntaxCollectorBase() with
                 override x.WalkExpr(_, e: SynExpr) =
                     match e with
-                    | SynExpr.Record(copyInfo = Some(synExpr, (withRange, _)); recordFields = fields; range = m) when not <| hasIgnoreComment m ->
+                    | SynExpr.Record(copyInfo = Some(synExpr, (withRange, _)); recordFields = fields; range = m) when
+                        not <| hasIgnoreComment m
+                        ->
                         let fixRange = Range.unionRanges synExpr.Range (Range.shiftEnd 0 1 withRange)
                         xs.Add(fields, e.Range, fixRange)
                     | _ -> ()
@@ -85,8 +89,10 @@ let helpUri = "https://ionide.io/ionide-analyzers/suggestion/001.html"
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
 let copyAndUpdateRecordChangesAllFieldsCliAnalyzer: Analyzer<CliContext> =
-    fun (context: CliContext) -> async { return analyze context.SourceText context.ParseFileResults.ParseTree context.TypedTree }
+    fun (context: CliContext) ->
+        async { return analyze context.SourceText context.ParseFileResults.ParseTree context.TypedTree }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
 let copyAndUpdateRecordChangesAllFieldsEditorAnalyzer: Analyzer<EditorContext> =
-    fun (context: EditorContext) -> async { return analyze context.SourceText context.ParseFileResults.ParseTree context.TypedTree }
+    fun (context: EditorContext) ->
+        async { return analyze context.SourceText context.ParseFileResults.ParseTree context.TypedTree }

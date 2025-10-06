@@ -64,7 +64,9 @@ let shortDescription =
 let helpUri = "https://ionide.io/ionide-analyzers/suggestion/006.html"
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
-let optionGetCliAnalyzer (ctx: CliContext) = async { return analyze ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
+let optionGetCliAnalyzer (ctx: CliContext) =
+    async { return analyze ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
-let optionGetEditorAnalyzer (ctx: EditorContext) = async { return analyze ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
+let optionGetEditorAnalyzer (ctx: EditorContext) =
+    async { return analyze ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }

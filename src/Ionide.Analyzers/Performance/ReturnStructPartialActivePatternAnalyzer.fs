@@ -101,7 +101,9 @@ let rec collectSomeAndNoneFromExprBody (expr: SynExpr) (finalContinuation: Ident
 let analyze (sourceText: ISourceText) (parsedInput: ParsedInput) (checkResults: FSharpCheckFileResults) : Message list =
     let idents = HashSet<FixData>()
     let comments = InputOperations.getCodeComments parsedInput
-    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
+
+    let hasIgnoreComment =
+        Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
 
     let collector =
         { new SyntaxCollectorBase() with

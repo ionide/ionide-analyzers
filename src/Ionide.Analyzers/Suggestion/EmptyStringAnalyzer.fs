@@ -62,8 +62,18 @@ let helpUri = "https://ionide.io/ionide-analyzers/suggestion/005.html"
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
 let emptyStringEditorAnalyzer (ctx: EditorContext) =
-    async { return ctx.TypedTree |> Option.map (analyze ctx.SourceText ctx.ParseFileResults.ParseTree) |> Option.defaultValue [] }
+    async {
+        return
+            ctx.TypedTree
+            |> Option.map (analyze ctx.SourceText ctx.ParseFileResults.ParseTree)
+            |> Option.defaultValue []
+    }
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
 let emptyStringCliAnalyzer (ctx: CliContext) =
-    async { return ctx.TypedTree |> Option.map (analyze ctx.SourceText ctx.ParseFileResults.ParseTree) |> Option.defaultValue [] }
+    async {
+        return
+            ctx.TypedTree
+            |> Option.map (analyze ctx.SourceText ctx.ParseFileResults.ParseTree)
+            |> Option.defaultValue []
+    }

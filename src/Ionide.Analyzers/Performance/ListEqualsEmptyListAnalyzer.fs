@@ -33,14 +33,18 @@ let private analyze
     =
     let xs = HashSet<EqualsOperation>()
     let comments = InputOperations.getCodeComments parsedInput
-    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
+
+    let hasIgnoreComment =
+        Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
 
     let collector =
         { new SyntaxCollectorBase() with
             override x.WalkExpr(path, synExpr) =
                 match synExpr with
                 | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(operatorIdent, argExpr), EmptyList, m)
-                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(operatorIdent, EmptyList), argExpr, m) when not <| hasIgnoreComment m ->
+                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(operatorIdent, EmptyList), argExpr, m) when
+                    not <| hasIgnoreComment m
+                    ->
                     xs.Add(EqualsOperation(operatorIdent, argExpr.Range, m)) |> ignore
                 | _ -> ()
         }

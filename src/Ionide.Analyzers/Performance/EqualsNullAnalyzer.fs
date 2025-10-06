@@ -38,19 +38,25 @@ let private analyze
     =
     let xs = HashSet<EqualsNullOperation>()
     let comments = InputOperations.getCodeComments parsedInput
-    let hasIgnoreComment = Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
+
+    let hasIgnoreComment =
+        Ignore.hasComment ignoreComment comments sourceText >> Option.isSome
 
     let collector =
         { new SyntaxCollectorBase() with
             override x.WalkExpr(path, synExpr) =
                 match synExpr with
                 | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(opIdent, argExpr), SynExpr.Null _, m)
-                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(opIdent, SynExpr.Null _), argExpr, m) when not <| hasIgnoreComment m ->
+                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpEquality(opIdent, SynExpr.Null _), argExpr, m) when
+                    not <| hasIgnoreComment m
+                    ->
                     xs.Add(EqualsNullOperation(false, argExpr.Range, opIdent, addParens argExpr, m))
                     |> ignore
 
                 | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpInequality(opIdent, argExpr), SynExpr.Null _, m)
-                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpInequality(opIdent, SynExpr.Null _), argExpr, m) when not <| hasIgnoreComment m ->
+                | SynExpr.App(ExprAtomicFlag.NonAtomic, false, OpInequality(opIdent, SynExpr.Null _), argExpr, m) when
+                    not <| hasIgnoreComment m
+                    ->
                     xs.Add(EqualsNullOperation(true, argExpr.Range, opIdent, addParens argExpr, m))
                     |> ignore
                 | _ -> ()

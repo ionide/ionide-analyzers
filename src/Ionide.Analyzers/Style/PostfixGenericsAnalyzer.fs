@@ -18,8 +18,7 @@ let analyze (sourceText: ISourceText) (input: ParsedInput) =
         { new SyntaxCollectorBase() with
             override x.WalkType(_, t: SynType) =
                 match t, hasIgnoreComment t.Range with
-                | SynType.Array _, None -> 
-                    ts.Add("Prefer postfix syntax for arrays.", t.Range)
+                | SynType.Array _, None -> ts.Add("Prefer postfix syntax for arrays.", t.Range)
                 | SynType.App(typeName = SynType.LongIdent synLongIdent; isPostfix = false), None ->
                     match synLongIdent.LongIdent with
                     | [ ident ] ->

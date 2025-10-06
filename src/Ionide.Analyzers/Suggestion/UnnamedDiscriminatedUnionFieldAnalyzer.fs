@@ -19,7 +19,9 @@ let analyze (sourceText: ISourceText) parseTree =
             override x.WalkUnionCase(_, unionCase: SynUnionCase) =
                 match unionCase with
                 | SynUnionCase(caseType = SynUnionCaseKind.Fields [ _ ]) -> ()
-                | SynUnionCase(caseType = SynUnionCaseKind.Fields fields; range = range) when hasIgnoreComment range |> Option.isNone ->
+                | SynUnionCase(caseType = SynUnionCaseKind.Fields fields; range = range) when
+                    hasIgnoreComment range |> Option.isNone
+                    ->
                     let unnamedFields =
                         fields
                         |> List.choose (fun (SynField(idOpt = idOpt; range = mField)) ->

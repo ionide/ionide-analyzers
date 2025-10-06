@@ -51,7 +51,9 @@ let shortDescription = "A function is being ignored. Did you mean to execute thi
 let helpUri = "https://ionide.io/ionide-analyzers/suggestion/003.html"
 
 [<CliAnalyzer(name, shortDescription, helpUri)>]
-let ignoreFunctionCliAnalyzer (ctx: CliContext) = async { return analyzer ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
+let ignoreFunctionCliAnalyzer (ctx: CliContext) =
+    async { return analyzer ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
 
 [<EditorAnalyzer(name, shortDescription, helpUri)>]
-let ignoreFunctionEditorAnalyzer (ctx: EditorContext) = async { return analyzer ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
+let ignoreFunctionEditorAnalyzer (ctx: EditorContext) =
+    async { return analyzer ctx.SourceText ctx.ParseFileResults.ParseTree ctx.TypedTree }
