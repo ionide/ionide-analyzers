@@ -1,6 +1,12 @@
 # Changelog
 
 
+## 0.14.9 - 2025-10-19
+
+### Fixed 
+
+* Update FSharp.Analyzers.SDK to `0.33.1`. Checkout the [release notes](https://github.com/ionide/FSharp.Analyzers.SDK/releases/tag/v0.33.1) for details. [#163](https://github.com/ionide/ionide-analyzers/pull/163)
+
 ## 0.14.8 - 2025-10-19
 
 ### Fixed 
