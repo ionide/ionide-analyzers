@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="FSharp.Core" Version="[9.0.300]" />
     <PackageVersion Include="FSharp.Compiler.Service" Version="[43.9.300]" />
-    <PackageVersion Include="Ionide.KeepAChangelog.Tasks" Version="0.1.8" />
+    <PackageVersion Include="Ionide.KeepAChangelog.Tasks" Version="0.3.0" />
     <PackageVersion Include="DotNet.ReproducibleBuilds" Version="1.2.25" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="NUnit" Version="4.3.2" />
