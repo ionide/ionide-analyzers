@@ -26,6 +26,12 @@ jobs:
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
+        with:  
+          global-json-file: 'global.json'
+          dotnet-version: |
+            8.x 
+            9.x
+            10.x
 
       - name: Release
         run: dotnet fsi build.fsx -- -p Release

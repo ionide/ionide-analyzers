@@ -89,7 +89,6 @@ let rec collectSomeAndNoneFromExprBody (expr: SynExpr) (finalContinuation: Ident
         sequence continuations finalContinuation
 
     | SynExpr.LetOrUse(body = expr)
-    | SynExpr.LetOrUseBang(body = expr)
     | SynExpr.Paren(expr = expr)
     | SynExpr.Typed(expr = expr) -> collectSomeAndNoneFromExprBody expr finalContinuation
     | _ -> finalContinuation []
