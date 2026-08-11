@@ -63,7 +63,14 @@ type LanguageVersionShim(versionText: string) =
     static let LanguageVersionTy =
         lazy (Type.GetType("FSharp.Compiler.Features+LanguageVersion, FSharp.Compiler.Service"))
 
-    static let ctor = lazy (LanguageVersionTy.Value.GetConstructor([| typeof<string> |]))
+    // The constructor gained additional (optional) parameters over time, so we only match on the version text.
+    static let ctor =
+        lazy
+            (LanguageVersionTy.Value.GetConstructors()
+             |> Array.find (fun c ->
+                 let parameters = c.GetParameters()
+                 parameters.Length >= 1 && parameters[0].ParameterType = typeof<string>
+             ))
 
     static let isPreviewEnabled =
         lazy (ReflectionDelegates.createGetter<bool> LanguageVersionTy.Value "IsPreviewEnabled")
@@ -75,7 +82,12 @@ type LanguageVersionShim(versionText: string) =
                 LanguageFeatureShim.Type
                 "SupportsFeature")
 
-    let realLanguageVersion = ctor.Value.Invoke([| versionText |])
+    let realLanguageVersion =
+        let arguments =
+            ctor.Value.GetParameters()
+            |> Array.mapi (fun idx _ -> if idx = 0 then box versionText else null)
+
+        ctor.Value.Invoke(arguments)
 
     member x.IsPreviewEnabled = isPreviewEnabled.Value realLanguageVersion
 
