@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.0 - 2026-08-11
+
+* Create MixedPipeDirectionAnalyzer. [#178](https://github.com/ionide/ionide-analyzers/pull/178)
+
 ## 0.16.0 - 2026-08-11
 
 ### Fixed
