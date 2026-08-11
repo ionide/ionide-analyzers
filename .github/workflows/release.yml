@@ -37,7 +37,7 @@ jobs:
         id: login
         uses: NuGet/login@v1
         with:
-          user: chethusk
+          user: ${{ secrets.NUGET_USER }}
 
       - name: Release
         run: dotnet fsi build.fsx -- -p Release
