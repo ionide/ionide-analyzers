@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.0 - 2026-08-15
+
+### Changed
+
+* Rename MixedPipeDirectionAnalyzer to MixedFlowDirectionAnalyzer and extend it to cover mixed pipe and composition directions.
+
 ## 0.16.0 - 2026-08-11
 
 ### Added
