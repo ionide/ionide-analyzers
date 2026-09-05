@@ -1,6 +1,6 @@
 #r "nuget: Fun.Build, 1.0.3"
 #r "nuget: Fake.IO.FileSystem, 6.0.0"
-#r "nuget: NuGet.Protocol, 6.7.0"
+#r "nuget: NuGet.Protocol, 7.9.0"
 #r "nuget: Ionide.KeepAChangelog, 0.1.8"
 #r "nuget: Humanizer.Core, 2.14.1"
 
