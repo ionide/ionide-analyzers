@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Ionide.Analyzers/Ionide.Analyzers.fsproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Ionide.Analyzers.Tests/Ionide.Analyzers.Tests.fsproj" />
+  </Folder>
+</Solution>

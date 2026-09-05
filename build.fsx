@@ -45,8 +45,8 @@ pipeline "Build" {
     }
     stage "restore" { run "dotnet restore" }
     stage "build" {
-        run "dotnet restore ionide-analyzers.sln"
-        run "dotnet build --no-restore -c Release ionide-analyzers.sln"
+        run "dotnet restore ionide-analyzers.slnx"
+        run "dotnet build --no-restore -c Release ionide-analyzers.slnx"
     }
     stage "test" { run "dotnet test --no-restore --no-build -c Release" }
     packStage
