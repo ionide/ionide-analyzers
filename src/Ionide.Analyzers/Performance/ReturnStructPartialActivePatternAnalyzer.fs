@@ -147,7 +147,7 @@ let analyze (sourceText: ISourceText) (parsedInput: ParsedInput) (checkResults: 
             if
                 not mfv.IsActivePattern
                 || mfv.ReturnParameter.Type.IsFunctionType
-                || mfv.ReturnParameter.Type.BasicQualifiedName = "Microsoft.FSharp.Core.voption`1"
+                || mfv.ReturnParameter.Type.BasicQualifiedName = Some "Microsoft.FSharp.Core.voption`1"
             then
                 None
             else

@@ -117,7 +117,9 @@ let private analyze
                         false
                     else
 
-                    primitives.Contains ff.FieldType.BasicQualifiedName
+                    match ff.FieldType.BasicQualifiedName with
+                    | Some name -> primitives.Contains name
+                    | _ -> false
                 )
 
             if not allTypesArePrimitive then
