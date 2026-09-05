@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+* *Breaking*: [All packages now target .NET 10](https://github.com/ionide/ionide-analyzers/pull/193)
+* Update FSharp.Analyzers.SDK to `0.38.0`. Checkout the [release notes](https://github.com/ionide/FSharp.Analyzers.SDK/releases/tag/v0.38.0) for details. [#180](https://github.com/ionide/ionide-analyzers/pull/193)
+
 ## [0.17.0] - 2026-08-15
 
 ### Changed
