@@ -4,12 +4,20 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+    groups:
+      nuget:
+        patterns:
+          - "*"
     ignore:
       - dependency-name: "FSharp.Core"
       - dependency-name: "FSharp.Compiler.Service"
