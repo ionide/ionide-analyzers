@@ -1,10 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [0.20.0] - 2026-10-16
 
 ### Changed
 
-* Update FSharp.Analyzers.SDK to `0.41.0`, FSharp.Compiler.Service to `43.12.402`, and FSharp.Core to `10.1.402`. Checkout the [release notes](https://github.com/ionide/FSharp.Analyzers.SDK/releases/tag/v0.41.0) for details.
+* Update FSharp.Analyzers.SDK to `0.41.0`, FSharp.Compiler.Service to `43.12.402`, and FSharp.Core to `10.1.402`. Checkout the [release notes](https://github.com/ionide/FSharp.Analyzers.SDK/releases/tag/v0.41.0) for details. [#214](https://github.com/ionide/ionide-analyzers/pull/214)
 
 ## [0.19.0] - 2026-09-10
 
