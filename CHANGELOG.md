@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.22.0] - 2026-11-16
+
+### Changed
+
+* Update FSharp.Analyzers.SDK to `0.43.0`, FSharp.Compiler.Service to `43.13.404`, and FSharp.Core to `10.1.404`. Checkout the [release notes](https://github.com/ionide/FSharp.Analyzers.SDK/releases/tag/v0.43.0) for details. [#220](https://github.com/ionide/ionide-analyzers/pull/220)
+
+### Fixed
+
+* ReturnStructPartialActivePatternAnalyzer reports again with FSharp.Compiler.Service 43.13. FCS 43.13 supports only F# 8.0 and later, and removed the `StructActivePattern` language feature, so the analyzer skipped every file. [#220](https://github.com/ionide/ionide-analyzers/pull/220)
+
 ## [0.21.0] - 2026-11-16
 
 ### Changed

@@ -19,6 +19,15 @@ let analyze parseTree (typedTree: FSharpImplementationFileContents option) =
                     match e with
                     | SynExpr.Record(copyInfo = Some(synExpr, (withRange, _)); recordFields = fields) ->
                         let fixRange = Range.unionRanges synExpr.Range (Range.shiftEnd 0 1 withRange)
+
+                        let fields =
+                            fields
+                            |> List.choose (
+                                function
+                                | SynExprRecordFieldOrSpread.Field(field, _) -> Some field
+                                | SynExprRecordFieldOrSpread.Spread _ -> None
+                            )
+
                         xs.Add(fields, e.Range, fixRange)
                     | _ -> ()
             }

@@ -93,7 +93,8 @@ type LanguageVersionShim(versionText: string) =
 
     member x.SupportsFeature(featureId: LanguageFeatureShim) =
         match featureId.Case with
-        | None -> false
+        // FCS removes the case of a feature when every language version that it supports has the feature.
+        | None -> true
         | Some x -> supportsFeature.Value(realLanguageVersion, x)
 
     member x.Real = realLanguageVersion
